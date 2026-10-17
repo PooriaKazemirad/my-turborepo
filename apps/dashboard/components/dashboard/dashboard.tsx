@@ -23,25 +23,25 @@ import {
   Users,
   Wallet,
 } from "lucide-react"
-import { PersonAvatar as Avatar } from "@workspace/ui/components/person-avatar"
-import { Button } from "@workspace/ui/components/button"
+import { PersonAvatar as Avatar } from "shadcn-ui/components/molecules/person-avatar"
+import { Button } from "shadcn-ui/components/atomic/button"
 import {
   SalesChart,
   Sparkline,
-} from "@workspace/ui/components/dashboard-charts"
-import { DetailDialog as Dialog } from "@workspace/ui/components/detail-dialog"
+} from "shadcn-ui/components/molecules/charts/dashboard-charts"
+import { DetailDialog as Dialog } from "shadcn-ui/components/molecules/detail-dialog"
 import {
   Panel,
   PanelContent,
   PanelFooter,
   PanelHeader,
-} from "@workspace/ui/components/panel"
-import { StatusBadge } from "@workspace/ui/components/status-badge"
+} from "shadcn-ui/components/molecules/panel"
+import { StatusBadge } from "shadcn-ui/components/molecules/status-badge"
 import { AppShell } from "./app-shell"
 import { currency, orders, salesData, yearlySalesData } from "./data"
 import { Greeting } from "./greeting"
 import { OrdersTable } from "./orders-table"
-import { Typography } from "@workspace/ui/components/typography"
+import { Typography } from "shadcn-ui/components/atomic/typography"
 
 const metricDefinitions = [
   {

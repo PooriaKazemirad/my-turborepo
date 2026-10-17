@@ -29,14 +29,14 @@ import {
   SlidersHorizontal,
   Users,
 } from "lucide-react"
-import { PersonAvatar as Avatar } from "@workspace/ui/components/person-avatar"
-import { Button } from "@workspace/ui/components/button"
-import { DetailDialog as Dialog } from "@workspace/ui/components/detail-dialog"
-import { Input } from "@workspace/ui/components/input"
-import { StatusBadge } from "@workspace/ui/components/status-badge"
-import { ThemeSwitcher } from "@workspace/ui/components/theme-switcher"
-import { ThemeToggle } from "@workspace/ui/components/theme-toggle"
-import { Typography } from "@workspace/ui/components/typography"
+import { PersonAvatar as Avatar } from "shadcn-ui/components/molecules/person-avatar"
+import { Button } from "shadcn-ui/components/atomic/button"
+import { DetailDialog as Dialog } from "shadcn-ui/components/molecules/detail-dialog"
+import { Input } from "shadcn-ui/components/atomic/input"
+import { StatusBadge } from "shadcn-ui/components/molecules/status-badge"
+import { ThemeSwitcher } from "shadcn-ui/components/molecules/theme-switcher"
+import { ThemeToggle } from "shadcn-ui/components/molecules/theme-toggle"
+import { Typography } from "shadcn-ui/components/atomic/typography"
 import { DirectionSwitcher, useWorkspaceDirection } from "./workspace-direction"
 
 const navigation = [

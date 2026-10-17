@@ -1,9 +1,9 @@
 "use client"
 
 import { createContext, useContext, useState, type ReactNode } from "react"
-import { DirectionProvider } from "@workspace/ui/components/direction"
-import { Button } from "@workspace/ui/components/button"
-import { Typography } from "@workspace/ui/components/typography"
+import { DirectionProvider } from "shadcn-ui/components/atomic/direction"
+import { Button } from "shadcn-ui/components/atomic/button"
+import { Typography } from "shadcn-ui/components/atomic/typography"
 
 type Direction = "ltr" | "rtl"
 

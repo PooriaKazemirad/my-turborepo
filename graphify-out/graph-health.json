@@ -1,0 +1,193 @@
+{
+  "node_count": 1216,
+  "unverified_node_count": 0,
+  "raw_edge_count": 2857,
+  "non_object_edges": 0,
+  "missing_endpoint_edges": 0,
+  "dangling_endpoint_edges": 261,
+  "self_loop_edges": 0,
+  "valid_candidate_edges": 2596,
+  "exact_duplicate_edges": 18,
+  "directed_unique_endpoint_pairs": 2546,
+  "directed_same_endpoint_collapsed_edges": 50,
+  "undirected_unique_endpoint_pairs": 2546,
+  "undirected_same_endpoint_collapsed_edges": 50,
+  "same_endpoint_group_count": 50,
+  "relation_variant_groups": 29,
+  "source_file_variant_groups": 0,
+  "source_location_variant_groups": 3,
+  "context_variant_groups": 0,
+  "post_build_graph_type": "Graph",
+  "post_build_node_count": 1216,
+  "post_build_edge_count": 2546,
+  "post_build_error": "",
+  "producer_suppression": {
+    "path": "C:\\Users\\PKA\\AppData\\Roaming\\uv\\tools\\graphifyy\\Lib\\site-packages\\graphify\\extract.py",
+    "total_sites": 12,
+    "sites": [
+      {
+        "line": 1158,
+        "name": "seen_ids",
+        "tuple_arity": 0,
+        "sample": "seen_ids = {n[\"id\"] for n in nodes}"
+      },
+      {
+        "line": 1424,
+        "name": "seen_ids",
+        "tuple_arity": 0,
+        "sample": "seen_ids = {n[\"id\"] for n in nodes}"
+      },
+      {
+        "line": 1426,
+        "name": "seen_doc_refs",
+        "tuple_arity": 0,
+        "sample": "seen_doc_refs: set[str] = set()"
+      },
+      {
+        "line": 1786,
+        "name": "seen_ids",
+        "tuple_arity": 0,
+        "sample": "seen_ids: set[str] = {n[\"id\"] for n in nodes}"
+      },
+      {
+        "line": 1933,
+        "name": "seen_ids",
+        "tuple_arity": 0,
+        "sample": "seen_ids = {n.get(\"id\") for n in nodes}"
+      },
+      {
+        "line": 2551,
+        "name": "seen_keys",
+        "tuple_arity": 0,
+        "sample": "seen_keys: set[tuple] = set()"
+      },
+      {
+        "line": 2720,
+        "name": "seen_keys",
+        "tuple_arity": 0,
+        "sample": "seen_keys: set[tuple] = set()"
+      },
+      {
+        "line": 4216,
+        "name": "seen_ids",
+        "tuple_arity": 0,
+        "sample": "seen_ids: set[str] = set()"
+      },
+      {
+        "line": 4324,
+        "name": "seen_ids",
+        "tuple_arity": 0,
+        "sample": "seen_ids: set[str] = set()"
+      },
+      {
+        "line": 4403,
+        "name": "seen_ids",
+        "tuple_arity": 0,
+        "sample": "seen_ids: set[str] = set()"
+      },
+      {
+        "line": 4918,
+        "name": "seen_ids",
+        "tuple_arity": 0,
+        "sample": "seen_ids: set[str] = set()"
+      },
+      {
+        "line": 4919,
+        "name": "seen_edges",
+        "tuple_arity": 4,
+        "sample": "seen_edges: set[tuple[str, str, str, str | None]] = set()"
+      }
+    ],
+    "error": ""
+  },
+  "examples": [
+    {
+      "source": "apps_dashboard_components_dashboard_app_shell_appshell",
+      "target": "apps_dashboard_components_dashboard_app_shell_appshell_shortcut",
+      "edge_count": 2,
+      "relations": [
+        "contains",
+        "indirect_call"
+      ],
+      "source_files": [
+        "apps/dashboard/components/dashboard/app-shell.tsx"
+      ],
+      "source_locations": [
+        "L281",
+        "L287"
+      ],
+      "contexts": [
+        "",
+        "argument"
+      ]
+    },
+    {
+      "source": "apps_dashboard_components_dashboard_chart_examples",
+      "target": "packages_shadcn_ui_src_components_molecules_charts_cartesian_chart_barchart",
+      "edge_count": 2,
+      "relations": [
+        "imports"
+      ],
+      "source_files": [
+        "apps/dashboard/components/dashboard/chart-examples.tsx"
+      ],
+      "source_locations": [
+        "L14"
+      ],
+      "contexts": [
+        "import"
+      ]
+    },
+    {
+      "source": "apps_dashboard_components_dashboard_chart_examples",
+      "target": "packages_shadcn_ui_src_components_molecules_charts_cartesian_chart_areachart",
+      "edge_count": 2,
+      "relations": [
+        "imports"
+      ],
+      "source_files": [
+        "apps/dashboard/components/dashboard/chart-examples.tsx"
+      ],
+      "source_locations": [
+        "L15"
+      ],
+      "contexts": [
+        "import"
+      ]
+    },
+    {
+      "source": "apps_dashboard_components_dashboard_chart_examples",
+      "target": "packages_shadcn_ui_src_components_molecules_charts_cartesian_chart_linechart",
+      "edge_count": 2,
+      "relations": [
+        "imports"
+      ],
+      "source_files": [
+        "apps/dashboard/components/dashboard/chart-examples.tsx"
+      ],
+      "source_locations": [
+        "L16"
+      ],
+      "contexts": [
+        "import"
+      ]
+    },
+    {
+      "source": "apps_dashboard_components_dashboard_chart_examples",
+      "target": "packages_shadcn_ui_src_components_molecules_charts_polar_chart_piechart",
+      "edge_count": 2,
+      "relations": [
+        "imports"
+      ],
+      "source_files": [
+        "apps/dashboard/components/dashboard/chart-examples.tsx"
+      ],
+      "source_locations": [
+        "L17"
+      ],
+      "contexts": [
+        "import"
+      ]
+    }
+  ]
+}

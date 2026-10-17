@@ -1,4 +1,4 @@
-import type { SalesPoint } from "@workspace/ui/components/dashboard-charts"
+import type { SalesPoint } from "shadcn-ui/components/molecules/charts/dashboard-charts"
 
 export const salesData: SalesPoint[] = [
   { date: "Oct 1", current: 12, previous: 20 },

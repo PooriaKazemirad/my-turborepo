@@ -12,11 +12,11 @@
     "typecheck": "next typegen && tsc --noEmit"
   },
   "dependencies": {
-    "@workspace/ui": "workspace:*",
     "lucide-react": "^1.57.0",
     "next": "16.4.2",
     "react": "19.3.1",
-    "react-dom": "19.3.1"
+    "react-dom": "19.3.1",
+    "shadcn-ui": "workspace:*"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -26,6 +26,7 @@
     "@workspace/eslint-config": "workspace:^",
     "@workspace/typescript-config": "workspace:*",
     "eslint": "^10",
+    "jiti": "^2.7.0",
     "typescript": "7.0.2"
   }
 }

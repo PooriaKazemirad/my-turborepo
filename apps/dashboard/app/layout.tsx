@@ -3,11 +3,11 @@ import { Geist, Geist_Mono } from "next/font/google"
 import { cookies } from "next/headers"
 import { WorkspaceDirectionProvider } from "@/components/dashboard/workspace-direction"
 
-import "@workspace/ui/globals.css"
+import "shadcn-ui/globals.css"
 import "./dashboard.css"
-import { ThemeProvider } from "@workspace/ui/components/theme-provider"
-import { TooltipProvider } from "@workspace/ui/components/tooltip"
-import { Toaster } from "@workspace/ui/components/toast"
+import { ThemeProvider } from "shadcn-ui/components/molecules/theme-provider"
+import { TooltipProvider } from "shadcn-ui/components/atomic/tooltip"
+import { Toaster } from "shadcn-ui/components/atomic/toast"
 
 const fontSans = Geist({
   subsets: ["latin"],

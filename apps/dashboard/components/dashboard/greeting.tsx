@@ -2,7 +2,7 @@
 
 import { useSyncExternalStore } from "react"
 import { Moon, Sun } from "lucide-react"
-import { Typography } from "@workspace/ui/components/typography"
+import { Typography } from "shadcn-ui/components/atomic/typography"
 
 function subscribeToClock(onChange: () => void) {
   const timer = setInterval(onChange, 60_000)

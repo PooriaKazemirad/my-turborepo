@@ -10,17 +10,17 @@ import {
   Search,
   SearchX,
 } from "lucide-react"
-import { PersonAvatar as Avatar } from "@workspace/ui/components/person-avatar"
-import { Button } from "@workspace/ui/components/button"
-import { DetailDialog as Dialog } from "@workspace/ui/components/detail-dialog"
-import { Input } from "@workspace/ui/components/input"
+import { PersonAvatar as Avatar } from "shadcn-ui/components/molecules/person-avatar"
+import { Button } from "shadcn-ui/components/atomic/button"
+import { DetailDialog as Dialog } from "shadcn-ui/components/molecules/detail-dialog"
+import { Input } from "shadcn-ui/components/atomic/input"
 import {
   Panel,
   PanelContent,
   PanelFooter,
   PanelHeader,
-} from "@workspace/ui/components/panel"
-import { StatusBadge } from "@workspace/ui/components/status-badge"
+} from "shadcn-ui/components/molecules/panel"
+import { StatusBadge } from "shadcn-ui/components/molecules/status-badge"
 import {
   Table,
   TableBody,
@@ -29,9 +29,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@workspace/ui/components/table"
+} from "shadcn-ui/components/atomic/table"
 import { currency, formatDate, orders, statusTone, type Order } from "./data"
-import { Typography } from "@workspace/ui/components/typography"
+import { Typography } from "shadcn-ui/components/atomic/typography"
 
 type SortKey = "project" | "name" | "status" | "price" | "deadline"
 const pageSize = 5

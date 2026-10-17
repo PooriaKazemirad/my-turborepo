@@ -18,13 +18,15 @@ The implementation preserves the reference's content hierarchy while adding a di
 
 ## Token architecture
 
-`packages/ui/src/styles/tokens.css` is the source of truth. It has three levels:
+Reusable charts for all six shadcn chart families plus a gauge are grouped in `molecules/charts` and documented in [the chart guide](charts.md), with live variants in the Components tab.
+
+`packages/shadcn-ui/src/styles/tokens.css` is the source of truth. It has three levels:
 
 1. **Foundations:** the neutral palette, spacing, type, radii, elevation, and motion.
 2. **Semantic roles:** `background`, `foreground`, `card`, `primary`, `success`, `sidebar`, and chart roles reference foundations or define purpose-specific colors.
 3. **Component usage:** Tailwind utilities in `globals.css` and layout rules in `apps/dashboard/app/dashboard.css` consume those roles.
 
-Themes override semantic values under `.dark`; component markup stays the same. Use semantic colors in components, and add raw color values only to the token file. Consumers can import the tokens alone from `@workspace/ui/tokens.css`, or use the complete `@workspace/ui/globals.css`. `lib/design-tokens.ts` contains token names and descriptions, with no duplicated visual values. `/design-system` resolves values from the active CSS theme, supports copying `var(--token)`, and exports grouped JSON for the selected theme. The JSON is a resolved CSS-variable export, not a claimed DTCG interchange format.
+Themes override semantic values under `.dark`; component markup stays the same. Use semantic colors in components, and add raw color values only to the token file. Consumers can import the tokens alone from `shadcn-ui/tokens.css`, or use the complete `shadcn-ui/globals.css`. `lib/design-tokens.ts` contains token names and descriptions, with no duplicated visual values. `/design-system` resolves values from the active CSS theme, supports copying `var(--token)`, and exports grouped JSON for the selected theme. The JSON is a resolved CSS-variable export, not a claimed DTCG interchange format.
 
 | Category   | Tokens / convention                                                                                     |
 | ---------- | ------------------------------------------------------------------------------------------------------- |
@@ -54,13 +56,13 @@ table alignment, input adornments, and control spacing use logical properties.
 Directional navigation icons and gallery tab arrow keys follow the active
 direction. Sales charts retain left-to-right chronological order.
 
-Import from `@workspace/ui/components/<name>`.
+Import from `shadcn-ui/components/atomic/<name>`.
 
 All application tables use the shared shadcn `Table`, `TableHeader`, `TableBody`, `TableRow`, `TableHead`, `TableCell`, and `TableCaption` components. This includes orders, the token reference, and the sales chart's screen-reader data table. `Table` accepts an optional `containerClassName` to control its built-in scroll container, including bounded-height and screen-reader-only layouts. Calendar week-number rendering also uses `TableCell`.
 
 The complete official **Base UI / Nova** registry is installed: 63 component modules, plus the mobile and code-highlighting hooks. The registry's `form` entry is currently an empty compatibility placeholder; form interfaces are composed with `Field` and the input components. All installable component files from `shadcn add --all` are present, including the message, code block, attachment, questionnaire, and trace components.
 
-The **Components** tab at `/design-system` has a searchable index with category filters, copyable import paths, official documentation links, and interactive controls, calendar, accordion, tooltip, and toast previews. The inventory is exported from `@workspace/ui/lib/component-catalog`.
+The **Components** tab at `/design-system` has a searchable index with category filters, copyable import paths, official documentation links, and interactive controls, calendar, accordion, tooltip, and toast previews. The inventory is exported from `shadcn-ui/lib/component-catalog`.
 
 `TooltipProvider` and `Toaster` are mounted in the app layout. Components use the shared semantic `cn` configuration and the existing token stylesheet. The syntax highlighter has an explicit package export because it is a TSX module. The generated carousel and mobile hook use `useSyncExternalStore` for their external state subscriptions so they comply with this project's React lint rules.
 
@@ -94,8 +96,8 @@ import {
   PanelContent,
   PanelFooter,
   PanelHeader,
-} from "@workspace/ui/components/panel"
-import { StatusBadge } from "@workspace/ui/components/status-badge"
+} from "shadcn-ui/components/molecules/panel"
+import { StatusBadge } from "shadcn-ui/components/molecules/status-badge"
 
 ;<Panel aria-labelledby="project-status-title">
   <PanelHeader
@@ -115,7 +117,7 @@ App-specific state and data live in `apps/dashboard/components/dashboard`. The r
 
 ### Panel composition
 
-The main page uses eight panels: three metrics, sales, assets, orders, products, and activity. They shared a surface and title row but previously repeated content padding and footer borders. Metrics also implemented their own title row. These patterns now use the same four exports from `@workspace/ui/components/panel`.
+The main page uses eight panels: three metrics, sales, assets, orders, products, and activity. They shared a surface and title row but previously repeated content padding and footer borders. Metrics also implemented their own title row. These patterns now use the same four exports from `shadcn-ui/components/molecules/panel`.
 
 `Panel` lays out its children vertically and consumes the card, border, radius, and elevation tokens. `PanelContent` uses the shared 20px padding by default; choose `padding="none"` for tables or asset grids. `PanelFooter` keeps footers at the bottom of stretched cards and wraps notes, actions, or pagination. All four components forward native attributes, refs, and `className`.
 
@@ -130,10 +132,10 @@ The Components tab at `/design-system` includes an interactive panel example. Pa
 
 ### Autocomplete field
 
-`AutocompleteField` from `@workspace/ui/components/autocomplete-field` combines the installed Base UI autocomplete behavior with shadcn field, input-group, and combobox presentation. It accepts free text; choosing a suggestion inserts its label. Use the existing `Combobox` when the value must be restricted to a predefined choice.
+`AutocompleteField` from `shadcn-ui/components/molecules/autocomplete-field` combines the installed Base UI autocomplete behavior with shadcn field, input-group, and combobox presentation. It accepts free text; choosing a suggestion inserts its label. Use the existing `Combobox` when the value must be restricted to a predefined choice.
 
 ```tsx
-import { AutocompleteField } from "@workspace/ui/components/autocomplete-field"
+import { AutocompleteField } from "shadcn-ui/components/molecules/autocomplete-field"
 
 ;<AutocompleteField
   label="Project"
@@ -168,7 +170,7 @@ The Components tab at `/design-system` includes controlled, uncontrolled, requir
 
 ## Typography component
 
-Import `Typography` from `@workspace/ui/components/typography`. All application text uses it, directly or through text primitives such as `Label`, `PanelHeader`, `StatusBadge`, and shadcn table cells. It is a pure component that works in server and client modules without adding a client boundary.
+Import `Typography` from `shadcn-ui/components/atomic/typography`. All application text uses it, directly or through text primitives such as `Label`, `PanelHeader`, `StatusBadge`, and shadcn table cells. It is a pure component that works in server and client modules without adding a client boundary.
 
 - `variant`: `caption`, `label`, `body` (default), `subtitle`, `title`, `heading`, `metric`, or `inherit`. Sizes and line heights reference the CSS tokens; metrics use tabular numbers.
 - `as`: the semantic HTML element, defaulting to `p`. Use `h1`–`h6` for headings, `span` for inline text, `label` with `htmlFor` for form labels, and `code`/`pre` for code. Shared table primitives render `th`, `td`, and `caption` through Typography.
@@ -179,7 +181,7 @@ Import `Typography` from `@workspace/ui/components/typography`. All application 
 - Native props, refs, ARIA attributes, and `className` pass through to the selected element. Classes can override defaults, including responsive sizes.
 
 ```tsx
-import { Typography } from "@workspace/ui/components/typography"
+import { Typography } from "shadcn-ui/components/atomic/typography"
 
 <Typography as="h1" variant="heading" weight="semibold" color="foreground">Overview</Typography>
 <Typography color="muted-foreground">Your latest workspace activity.</Typography>
@@ -188,11 +190,25 @@ import { Typography } from "@workspace/ui/components/typography"
 <Typography as="span" variant="inherit" color="inherit">Save changes</Typography>
 ```
 
-`typographyVariants` is also exported from the component and `@workspace/ui/lib/typography` for controls that own their rendering. Library text sizes use the same semantic utilities, including responsive input sizes. Native option contents remain plain text; the option element renders through Typography. Chart-generated SVG labels and tooltips read the same CSS font-size variables. The typography foundation preview at `/design-system` renders each specimen with its corresponding component variant.
+`typographyVariants` is also exported from the component and `shadcn-ui/lib/typography` for controls that own their rendering. Library text sizes use the same semantic utilities, including responsive input sizes. Native option contents remain plain text; the option element renders through Typography. Chart-generated SVG labels and tooltips read the same CSS font-size variables. The typography foundation preview at `/design-system` renders each specimen with its corresponding component variant.
 
 Application and shared Typography instances declare their color explicitly. Use semantic tokens for primary content, supporting text, errors, and trends. Use `color="inherit"` inside controls, navigation, nested text, and table contexts whose parent owns the color. Hover, selected, invalid, and disabled state styles stay on the owning control. Badges and avatars resolve their tone to a color token internally; caller color classes can still override their appearance.
 
+## Component examples
+
+The **Components** tab at `/design-system` includes a live example for each of the 63 installed shadcn components. Use the library search and category filter, then choose **Show example** on a component card. Documentation and copyable import paths remain alongside each preview.
+
+Examples include form validation, searchable selections, navigation, sortable tables, resizable panels, menus, dialogs, loading feedback, and conversation components. The questionnaire has two steps; the message scroller can append sample messages; attachment removal can be reversed. All changes stay in the preview and reset when it is closed.
+
+Previews mount on demand and load in separate control, layout, navigation, overlay, and conversation groups. The typed registry in `apps/dashboard/components/dashboard/component-examples/registry.ts` requires every installed component to have an example group. Keep new examples in the corresponding module and use shared Typography, color tokens, and accessible labels. Static examples demonstrate appearance; interactive examples expose local state and feedback.
+
+Menus and selections support keyboard navigation. Dialogs support Escape and restore focus to their trigger. The context-menu example opens with a right click or Shift+F10. Examples inherit light/dark appearance and page direction; the Direction example changes only its own content.
+
 ## Behavior and accessibility
+
+- Keep HTML `dir` and `DirectionProvider` synchronized. Charts inherit the provider and accept an explicit `dir` override; see `docs/charts.md` for geometry, labels, and mixed-direction examples.
+- Carousels inherit direction, align slides and buttons to logical start/end, and use Left/Right in horizontal mode or Up/Down in vertical mode. `opts.direction` or `dir` can override the inherited value. Numeric OTP codes and code samples keep LTR character order within RTL layouts.
+- Sheets default to `side="inline-end"`; `inline-start` is also supported. Physical `left`/`right` remain available when placement must be fixed. Sidebars default to the reading start edge, with physical side overrides preserved. Nested dropdown, context, and menubar menus open toward inline end and support RTL arrow keys.
 
 - Global search opens with Ctrl/⌘ + K. Dialogs support Escape, focus trapping, and returning focus.
 - Order search matches project, person, and ID. Filters reset pagination; headings sort either direction and expose `aria-sort`. Empty results explain recovery.
@@ -204,6 +220,6 @@ Application and shared Typography instances declare their color explicitly. Use 
 
 ## Validation
 
-Run `pnpm typecheck`, `pnpm lint`, `pnpm build`, and `pnpm --filter @workspace/ui test`. Token checks cover missing references, theme-role availability, text contrast, and custom typography class merging. Browser checks exercise the dashboard and catalog, including filters, sorting, dialogs, themes, and mobile navigation.
+Run `pnpm typecheck`, `pnpm lint`, `pnpm build`, and `pnpm --filter shadcn-ui test`. Token checks cover missing references, theme-role availability, text contrast, and custom typography class merging. Browser checks exercise the dashboard and catalog, including filters, sorting, dialogs, themes, and mobile navigation.
 
 The development-only `.next/dev/types/validator.ts` is excluded from the app's standalone TypeScript input because this Next.js build emits unused API-route imports for an app without API routes. `.next/types/validator.ts` remains included, so production page/layout validation and strict unused-symbol checking stay enabled.

@@ -1,46 +1,48 @@
 "use client"
 
 import { useState } from "react"
+import { ChartExamples } from "./chart-examples"
+import { ComponentExample } from "./component-examples"
 import { ArrowUpRight, Check, Copy, Search } from "lucide-react"
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@workspace/ui/components/accordion"
-import { Button } from "@workspace/ui/components/button"
+} from "shadcn-ui/components/atomic/accordion"
+import { Button } from "shadcn-ui/components/atomic/button"
 import {
   AutocompleteField,
   type AutocompleteOption,
-} from "@workspace/ui/components/autocomplete-field"
-import { Calendar } from "@workspace/ui/components/calendar"
-import { Checkbox } from "@workspace/ui/components/checkbox"
-import { Label } from "@workspace/ui/components/label"
+} from "shadcn-ui/components/molecules/autocomplete-field"
+import { Calendar } from "shadcn-ui/components/atomic/calendar"
+import { Checkbox } from "shadcn-ui/components/atomic/checkbox"
+import { Label } from "shadcn-ui/components/atomic/label"
 import {
   Panel,
   PanelContent,
   PanelFooter,
   PanelHeader,
-} from "@workspace/ui/components/panel"
-import { Input } from "@workspace/ui/components/input"
-import { Progress } from "@workspace/ui/components/progress"
+} from "shadcn-ui/components/molecules/panel"
+import { Input } from "shadcn-ui/components/atomic/input"
+import { Progress } from "shadcn-ui/components/atomic/progress"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@workspace/ui/components/select"
-import { Slider } from "@workspace/ui/components/slider"
-import { Switch } from "@workspace/ui/components/switch"
-import { toast } from "@workspace/ui/components/toast"
+} from "shadcn-ui/components/atomic/select"
+import { Slider } from "shadcn-ui/components/atomic/slider"
+import { Switch } from "shadcn-ui/components/atomic/switch"
+import { toast } from "shadcn-ui/components/atomic/toast"
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@workspace/ui/components/tooltip"
-import { shadcnComponents } from "@workspace/ui/lib/component-catalog"
-import { Typography } from "@workspace/ui/components/typography"
+} from "shadcn-ui/components/atomic/tooltip"
+import { shadcnComponents } from "shadcn-ui/lib/component-catalog"
+import { Typography } from "shadcn-ui/components/atomic/typography"
 
 const controlNames = new Set([
   "button",
@@ -185,7 +187,7 @@ export function ComponentCatalog() {
   )
 
   async function copyPath(name: string) {
-    const path = `@workspace/ui/components/${name}`
+    const path = `shadcn-ui/components/atomic/${name}`
     try {
       await navigator.clipboard.writeText(path)
       setCopied(name)
@@ -205,6 +207,7 @@ export function ComponentCatalog() {
 
   return (
     <div className="space-y-5 lg:col-span-2">
+      <ChartExamples />
       <div className="grid gap-5 lg:grid-cols-2">
         <Panel>
           <PanelHeader
@@ -485,7 +488,7 @@ export function ComponentCatalog() {
       <Panel id="component-library">
         <PanelHeader
           title="The complete component library"
-          description={`${shadcnComponents.length} installed shadcn components. Search by name or browse a category.`}
+          description={`${shadcnComponents.length} installed shadcn components with live examples. Search by name or browse a category.`}
           action={
             <Typography
               color="muted-foreground"
@@ -568,7 +571,7 @@ export function ComponentCatalog() {
                   variant="caption"
                   className="truncate"
                 >
-                  components/{name}
+                  components/atomic/{name}
                 </Typography>
                 {copied === name ? (
                   <Check className="size-3 shrink-0 text-success" />
@@ -576,6 +579,7 @@ export function ComponentCatalog() {
                   <Copy className="size-3 shrink-0" />
                 )}
               </button>
+              <ComponentExample name={name} title={titleFor(name)} />
             </article>
           ))}
         </div>

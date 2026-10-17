@@ -15,18 +15,18 @@ import {
   Search,
   Type,
 } from "lucide-react"
-import { PersonAvatar as Avatar } from "@workspace/ui/components/person-avatar"
-import { Button } from "@workspace/ui/components/button"
-import { DetailDialog as Dialog } from "@workspace/ui/components/detail-dialog"
-import { Input } from "@workspace/ui/components/input"
+import { PersonAvatar as Avatar } from "shadcn-ui/components/molecules/person-avatar"
+import { Button } from "shadcn-ui/components/atomic/button"
+import { DetailDialog as Dialog } from "shadcn-ui/components/molecules/detail-dialog"
+import { Input } from "shadcn-ui/components/atomic/input"
 import {
   Panel,
   PanelContent,
   PanelFooter,
   PanelHeader,
-} from "@workspace/ui/components/panel"
-import { StatusBadge } from "@workspace/ui/components/status-badge"
-import { ThemeSwitcher } from "@workspace/ui/components/theme-switcher"
+} from "shadcn-ui/components/molecules/panel"
+import { StatusBadge } from "shadcn-ui/components/molecules/status-badge"
+import { ThemeSwitcher } from "shadcn-ui/components/molecules/theme-switcher"
 import {
   Table,
   TableBody,
@@ -34,16 +34,16 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@workspace/ui/components/table"
+} from "shadcn-ui/components/atomic/table"
 import {
   colorTokens,
   tokenGroups,
   typographyTokens,
-} from "@workspace/ui/lib/design-tokens"
+} from "shadcn-ui/lib/design-tokens"
 import { AppShell } from "./app-shell"
 import { ComponentCatalog } from "./component-catalog"
-import { shadcnComponents } from "@workspace/ui/lib/component-catalog"
-import { Typography } from "@workspace/ui/components/typography"
+import { shadcnComponents } from "shadcn-ui/lib/component-catalog"
+import { Typography } from "shadcn-ui/components/atomic/typography"
 import { DirectionSwitcher, useWorkspaceDirection } from "./workspace-direction"
 
 export function DesignSystem() {

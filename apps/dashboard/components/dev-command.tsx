@@ -2,10 +2,10 @@
 
 import { useState } from "react"
 
-import { Button } from "@workspace/ui/components/button"
-import { Input } from "@workspace/ui/components/input"
-import { Label } from "@workspace/ui/components/label"
-import { Typography } from "@workspace/ui/components/typography"
+import { Button } from "shadcn-ui/components/atomic/button"
+import { Input } from "shadcn-ui/components/atomic/input"
+import { Label } from "shadcn-ui/components/atomic/label"
+import { Typography } from "shadcn-ui/components/atomic/typography"
 
 export function DevCommand() {
   const [status, setStatus] = useState("")

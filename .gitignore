@@ -23,6 +23,7 @@ dist
 
 # turbo
 .turbo
+.local-artifacts/
 
 # misc
 .DS_Store
