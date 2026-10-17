@@ -1,0 +1,25 @@
+"use client"
+
+import { cn } from "@workspace/ui/lib/utils"
+import {
+  Typography,
+  type TypographyNativeProps,
+} from "@workspace/ui/components/typography"
+
+function Label({ className, ...props }: TypographyNativeProps<"label">) {
+  return (
+    <Typography
+      color="inherit"
+      as="label"
+      variant="inherit"
+      data-slot="label"
+      className={cn(
+        "flex items-center gap-2 text-subtitle leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50",
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
+export { Label }
