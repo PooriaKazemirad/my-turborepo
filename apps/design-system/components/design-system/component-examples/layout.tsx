@@ -9,7 +9,12 @@ import {
   AccordionContent,
 } from "shadcn-ui/components/atomic/accordion"
 import { AspectRatio } from "shadcn-ui/components/atomic/aspect-ratio"
-import { Avatar, AvatarFallback } from "shadcn-ui/components/atomic/avatar"
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarGroup,
+  AvatarGroupCount,
+} from "shadcn-ui/components/atomic/avatar"
 import { Badge } from "shadcn-ui/components/atomic/badge"
 import { Button } from "shadcn-ui/components/atomic/button"
 import { Calendar } from "shadcn-ui/components/atomic/calendar"
@@ -55,7 +60,7 @@ import {
   ResizablePanel,
   ResizableHandle,
 } from "shadcn-ui/components/atomic/resizable"
-import { ScrollArea } from "shadcn-ui/components/atomic/scroll-area"
+import { ScrollArea, ScrollBar } from "shadcn-ui/components/atomic/scroll-area"
 import { Separator } from "shadcn-ui/components/atomic/separator"
 import {
   Table,
@@ -70,20 +75,25 @@ import { Typography } from "shadcn-ui/components/atomic/typography"
 import { BarChart } from "shadcn-ui/components/molecules/charts"
 import { Text, Note } from "./shared"
 import type { ExampleProps } from "./registry"
+import { choice } from "./variants"
 
 const tasks = [
   { name: "Design review", owner: "Emily", complete: true },
   { name: "Build preview", owner: "Ryan", complete: false },
 ]
 
-export default function Layout({ name }: ExampleProps) {
+export default function Layout({ name, variant }: ExampleProps) {
   const [date, setDate] = useState<Date | undefined>(new Date(2026, 9, 16))
   const [added, setAdded] = useState(false)
   const [sort, setSort] = useState(false)
   switch (name) {
     case "accordion":
       return (
-        <Accordion defaultValue={["details"]}>
+        <Accordion
+          multiple={variant === "Multiple"}
+          disabled={variant === "Disabled"}
+          defaultValue={["details"]}
+        >
           <AccordionItem value="details">
             <AccordionTrigger>
               <Text>Project details</Text>
@@ -106,7 +116,7 @@ export default function Layout({ name }: ExampleProps) {
       return (
         <>
           <AspectRatio
-            ratio={16 / 9}
+            ratio={variant === "1:1" ? 1 : variant === "4:3" ? 4 / 3 : 16 / 9}
             className="flex items-center justify-center rounded-lg border bg-secondary"
           >
             <Typography
@@ -114,17 +124,35 @@ export default function Layout({ name }: ExampleProps) {
               variant="title"
               weight="semibold"
             >
-              16:9
+              {variant}
             </Typography>
           </AspectRatio>
           <Note>The preview keeps its proportions as the card resizes.</Note>
         </>
       )
     case "avatar":
+      if (variant === "Group")
+        return (
+          <AvatarGroup>
+            {["EC", "RS", "LP"].map((initials) => (
+              <Avatar key={initials}>
+                <AvatarFallback>{initials}</AvatarFallback>
+              </Avatar>
+            ))}
+            <AvatarGroupCount>+3</AvatarGroupCount>
+          </AvatarGroup>
+        )
       return (
         <div className="flex items-center gap-3">
           {["EC", "RS", "LP"].map((initials) => (
             <Avatar
+              size={
+                variant === "Small"
+                  ? "sm"
+                  : variant === "Large"
+                    ? "lg"
+                    : "default"
+              }
               key={initials}
               aria-label={
                 initials === "EC"
@@ -144,8 +172,21 @@ export default function Layout({ name }: ExampleProps) {
     case "badge":
       return (
         <div className="flex flex-wrap gap-2">
-          <Badge>
-            <Text>Default</Text>
+          <Badge
+            variant={choice(
+              variant,
+              [
+                "default",
+                "secondary",
+                "destructive",
+                "outline",
+                "ghost",
+                "link",
+              ],
+              "default"
+            )}
+          >
+            <Text>{variant}</Text>
           </Badge>
           <Badge variant="secondary">
             <Text>Secondary</Text>
@@ -159,11 +200,30 @@ export default function Layout({ name }: ExampleProps) {
         </div>
       )
     case "calendar":
+      if (variant === "Multiple")
+        return (
+          <Calendar
+            mode="multiple"
+            defaultMonth={new Date(2026, 9, 1)}
+            aria-label="Choose multiple dates"
+          />
+        )
+      if (variant === "Range")
+        return (
+          <Calendar
+            mode="range"
+            defaultMonth={new Date(2026, 9, 1)}
+            aria-label="Choose a date range"
+          />
+        )
       return (
         <>
           <div className="max-w-full overflow-x-auto">
             <Calendar
               mode="single"
+              disabled={
+                variant === "Disabled dates" ? { dayOfWeek: [0, 6] } : undefined
+              }
               selected={date}
               onSelect={setDate}
               defaultMonth={new Date(2026, 9, 1)}
@@ -179,7 +239,7 @@ export default function Layout({ name }: ExampleProps) {
       )
     case "card":
       return (
-        <Card>
+        <Card size={variant === "Small" ? "sm" : "default"}>
           <CardHeader>
             <CardTitle>
               <Text>Team workspace</Text>
@@ -198,9 +258,15 @@ export default function Layout({ name }: ExampleProps) {
       )
     case "carousel":
       return (
-        <div className="px-8">
-          <Carousel className="w-full" opts={{ loop: true }}>
-            <CarouselContent>
+        <div className={variant === "Vertical" ? "py-10" : "px-8"}>
+          <Carousel
+            orientation={variant === "Vertical" ? "vertical" : "horizontal"}
+            className="w-full"
+            opts={{ loop: true }}
+          >
+            <CarouselContent
+              className={variant === "Vertical" ? "h-40" : undefined}
+            >
               {["Discover", "Build", "Review"].map((title, index) => (
                 <CarouselItem key={title}>
                   <div className="flex h-32 flex-col items-center justify-center gap-2 rounded-lg border bg-card">
@@ -212,8 +278,12 @@ export default function Layout({ name }: ExampleProps) {
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="-start-8" />
-            <CarouselNext className="-end-8" />
+            <CarouselPrevious
+              className={variant === "Vertical" ? "-top-8" : "-start-8"}
+            />
+            <CarouselNext
+              className={variant === "Vertical" ? "-bottom-8" : "-end-8"}
+            />
           </Carousel>
           <Note>Use the arrows or swipe to browse.</Note>
         </div>
@@ -222,13 +292,27 @@ export default function Layout({ name }: ExampleProps) {
       return (
         <BarChart
           label="Weekly sample visits"
-          data={[
-            { day: "Mon", visits: 12 },
-            { day: "Tue", visits: 24 },
-            { day: "Wed", visits: 18 },
-          ]}
+          stacked={variant === "Stacked"}
+          orientation={variant === "Horizontal" ? "horizontal" : "vertical"}
+          labels={variant === "Labels"}
+          loading={variant === "Loading"}
+          error={
+            variant === "Error" ? "Sample data could not be loaded." : undefined
+          }
+          data={
+            variant === "Empty"
+              ? []
+              : [
+                  { day: "Mon", visits: 12, returning: 8 },
+                  { day: "Tue", visits: 24, returning: 14 },
+                  { day: "Wed", visits: 18, returning: 10 },
+                ]
+          }
           categoryKey="day"
-          series={[{ dataKey: "visits", label: "Visits", color: "chart-1" }]}
+          series={[
+            { dataKey: "visits", label: "Visits", color: "chart-1" },
+            { dataKey: "returning", label: "Returning", color: "chart-2" },
+          ]}
           height={150}
           legend={false}
           valueAxis={false}
@@ -236,7 +320,10 @@ export default function Layout({ name }: ExampleProps) {
       )
     case "collapsible":
       return (
-        <Collapsible>
+        <Collapsible
+          defaultOpen={variant === "Open"}
+          disabled={variant === "Disabled"}
+        >
           <CollapsibleTrigger render={<Button variant="outline" size="sm" />}>
             <Text>Toggle project files</Text>
           </CollapsibleTrigger>
@@ -255,9 +342,9 @@ export default function Layout({ name }: ExampleProps) {
           </Button>
         </>
       ) : (
-        <Empty className="p-3">
+        <Empty className={variant === "Bordered" ? "border p-3" : "p-3"}>
           <EmptyHeader>
-            <EmptyMedia variant="icon">
+            <EmptyMedia variant={variant === "Default" ? "default" : "icon"}>
               <Inbox aria-hidden="true" />
             </EmptyMedia>
             <EmptyTitle>
@@ -277,9 +364,44 @@ export default function Layout({ name }: ExampleProps) {
       )
     case "item":
       return (
-        <Item variant="outline">
-          <ItemMedia variant="icon">
-            <FileText aria-hidden="true" />
+        <Item
+          variant={choice(variant, ["default", "outline", "muted"], "default")}
+          size={
+            variant === "Small"
+              ? "sm"
+              : variant === "Extra small"
+                ? "xs"
+                : "default"
+          }
+        >
+          <ItemMedia
+            variant={
+              variant === "Media default"
+                ? "default"
+                : variant === "Media image"
+                  ? "image"
+                  : "icon"
+            }
+          >
+            {variant === "Media image" ? (
+              <svg
+                viewBox="0 0 40 40"
+                role="img"
+                aria-label="Sample document cover"
+                className="size-full bg-secondary"
+              >
+                <rect
+                  x="10"
+                  y="6"
+                  width="20"
+                  height="28"
+                  rx="2"
+                  fill="currentColor"
+                />
+              </svg>
+            ) : (
+              <FileText aria-hidden="true" />
+            )}
           </ItemMedia>
           <ItemContent>
             <ItemTitle>
@@ -301,6 +423,7 @@ export default function Layout({ name }: ExampleProps) {
         </Item>
       )
     case "kbd":
+      if (variant === "Single") return <Kbd>Esc</Kbd>
       return (
         <>
           <KbdGroup>
@@ -319,17 +442,20 @@ export default function Layout({ name }: ExampleProps) {
       return (
         <>
           <ResizablePanelGroup
-            orientation="horizontal"
-            className="min-h-36 rounded-lg border"
+            orientation={variant === "Vertical" ? "vertical" : "horizontal"}
+            className="h-64 rounded-lg border"
           >
             <ResizablePanel defaultSize="50%" minSize="25%">
-              <div className="flex h-full min-h-36 items-center justify-center">
+              <div className="flex h-full items-center justify-center">
                 <Text>Outline</Text>
               </div>
             </ResizablePanel>
-            <ResizableHandle withHandle aria-label="Resize preview panels" />
+            <ResizableHandle
+              withHandle={variant !== "Without handle"}
+              aria-label="Resize preview panels"
+            />
             <ResizablePanel defaultSize="50%" minSize="25%">
-              <div className="flex h-full min-h-36 items-center justify-center">
+              <div className="flex h-full items-center justify-center">
                 <Text>Canvas</Text>
               </div>
             </ResizablePanel>
@@ -344,7 +470,13 @@ export default function Layout({ name }: ExampleProps) {
           aria-label="Recent activity list"
           tabIndex={0}
         >
-          <div className="space-y-3 p-3">
+          <div
+            className={
+              variant === "Horizontal"
+                ? "flex w-max gap-8 p-3"
+                : "space-y-3 p-3"
+            }
+          >
             {Array.from({ length: 12 }, (_, index) => (
               <div key={index}>
                 <Text>Project update {index + 1}</Text>
@@ -352,9 +484,18 @@ export default function Layout({ name }: ExampleProps) {
               </div>
             ))}
           </div>
+          {variant === "Horizontal" && <ScrollBar orientation="horizontal" />}
         </ScrollArea>
       )
     case "separator":
+      if (variant === "Vertical")
+        return (
+          <div className="flex h-12 items-center gap-4">
+            <Text>Design</Text>
+            <Separator orientation="vertical" />
+            <Text>Engineering</Text>
+          </div>
+        )
       return (
         <>
           <Text>Workspace details</Text>
@@ -387,18 +528,30 @@ export default function Layout({ name }: ExampleProps) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {[...tasks]
+            {(variant === "Empty" ? [] : [...tasks])
               .sort((a, b) =>
                 sort
                   ? a.name.localeCompare(b.name)
                   : b.name.localeCompare(a.name)
               )
               .map((task) => (
-                <TableRow key={task.name}>
+                <TableRow
+                  key={task.name}
+                  data-state={
+                    variant === "Selected row" && task.complete
+                      ? "selected"
+                      : undefined
+                  }
+                >
                   <TableCell>{task.name}</TableCell>
                   <TableCell>{task.owner}</TableCell>
                 </TableRow>
               ))}
+            {variant === "Empty" && (
+              <TableRow>
+                <TableCell colSpan={2}>No tasks found.</TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       )

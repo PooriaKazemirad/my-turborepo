@@ -38,24 +38,35 @@ import { Input } from "shadcn-ui/components/atomic/input"
 import { Label } from "shadcn-ui/components/atomic/label"
 import { Text, Note } from "./shared"
 import type { ExampleProps } from "./registry"
+import { choice } from "./variants"
 
-export default function Overlays({ name }: ExampleProps) {
+export default function Overlays({ name, variant }: ExampleProps) {
   const id = useId()
   const [open, setOpen] = useState(false)
   const [message, setMessage] = useState("")
   const [project, setProject] = useState("Modern Dashboard")
-  const [progress, setProgress] = useState(35)
+  const [progress, setProgress] = useState(
+    variant === "Empty" ? 0 : variant === "Complete" ? 100 : 35
+  )
   const [loading, setLoading] = useState(true)
   switch (name) {
     case "alert":
       return (
-        <Alert>
+        <Alert variant={variant === "Destructive" ? "destructive" : "default"}>
           <Info aria-hidden="true" />
           <AlertTitle>
-            <Text>You’re up to date</Text>
+            <Text>
+              {variant === "Destructive"
+                ? "Changes could not be saved"
+                : "You’re up to date"}
+            </Text>
           </AlertTitle>
           <AlertDescription>
-            <Text>All project changes have been saved.</Text>
+            <Text>
+              {variant === "Destructive"
+                ? "Review the connection and try again."
+                : "All project changes have been saved."}
+            </Text>
           </AlertDescription>
         </Alert>
       )
@@ -66,7 +77,7 @@ export default function Overlays({ name }: ExampleProps) {
             <A.AlertDialogTrigger render={<Button variant="outline" />}>
               <Text>Reset sample?</Text>
             </A.AlertDialogTrigger>
-            <A.AlertDialogContent>
+            <A.AlertDialogContent size={variant === "Small" ? "sm" : "default"}>
               <A.AlertDialogHeader>
                 <A.AlertDialogTitle>
                   <Text>Reset the preview?</Text>
@@ -104,7 +115,7 @@ export default function Overlays({ name }: ExampleProps) {
             <D.DialogTrigger render={<Button variant="outline" />}>
               <Text>Edit sample project</Text>
             </D.DialogTrigger>
-            <D.DialogContent>
+            <D.DialogContent showCloseButton={variant !== "Without close icon"}>
               <D.DialogHeader>
                 <D.DialogTitle>
                   <Text>Edit project</Text>
@@ -141,11 +152,19 @@ export default function Overlays({ name }: ExampleProps) {
       )
     case "drawer":
       return (
-        <Drawer.Drawer showSwipeHandle>
+        <Drawer.Drawer
+          showSwipeHandle={variant !== "Without handle"}
+          swipeDirection={choice(
+            variant,
+            ["down", "up", "left", "right"],
+            "down"
+          )}
+          snapPoints={variant === "Snap points" ? [0.4, 0.8] : undefined}
+        >
           <Drawer.DrawerTrigger render={<Button variant="outline" />}>
             <Text>Open activity drawer</Text>
           </Drawer.DrawerTrigger>
-          <Drawer.DrawerContent className="mx-auto max-w-md">
+          <Drawer.DrawerContent>
             <Drawer.DrawerHeader>
               <Drawer.DrawerTitle>
                 <Text>Recent activity</Text>
@@ -172,7 +191,16 @@ export default function Overlays({ name }: ExampleProps) {
           <HoverCardTrigger render={<Button variant="link" />}>
             <Text>Emily Carter</Text>
           </HoverCardTrigger>
-          <HoverCardContent>
+          <HoverCardContent
+            side={choice(variant, ["top", "bottom", "left", "right"], "bottom")}
+            align={
+              variant === "Start aligned"
+                ? "start"
+                : variant === "End aligned"
+                  ? "end"
+                  : "center"
+            }
+          >
             <div className="space-y-2">
               <Text>Emily Carter · Product designer</Text>
               <Note>Working on the shared component library.</Note>
@@ -186,7 +214,16 @@ export default function Overlays({ name }: ExampleProps) {
           <PopoverTrigger render={<Button variant="outline" />}>
             <Text>View workspace details</Text>
           </PopoverTrigger>
-          <PopoverContent>
+          <PopoverContent
+            side={choice(variant, ["top", "bottom", "left", "right"], "bottom")}
+            align={
+              variant === "Start aligned"
+                ? "start"
+                : variant === "End aligned"
+                  ? "end"
+                  : "center"
+            }
+          >
             <PopoverHeader>
               <PopoverTitle>
                 <Text>Product workspace</Text>
@@ -202,8 +239,15 @@ export default function Overlays({ name }: ExampleProps) {
     case "progress":
       return (
         <>
-          <Progress value={progress} aria-label="Sample import progress" />
-          <Note>Import progress: {progress}%</Note>
+          <Progress
+            value={variant === "Indeterminate" ? null : progress}
+            aria-label="Sample import progress"
+          />
+          <Note>
+            {variant === "Indeterminate"
+              ? "Waiting for progress…"
+              : `Import progress: ${progress}%`}
+          </Note>
           <Button
             size="sm"
             variant="outline"
@@ -224,7 +268,21 @@ export default function Overlays({ name }: ExampleProps) {
             <S.SheetTrigger render={<Button variant="outline" />}>
               <Text>Open project sheet</Text>
             </S.SheetTrigger>
-            <S.SheetContent>
+            <S.SheetContent
+              side={choice(
+                variant,
+                [
+                  "inline-start",
+                  "inline-end",
+                  "top",
+                  "right",
+                  "bottom",
+                  "left",
+                ],
+                "inline-end"
+              )}
+              showCloseButton={variant !== "Without close icon"}
+            >
               <S.SheetHeader>
                 <S.SheetTitle>
                   <Text>Project summary</Text>
@@ -258,7 +316,15 @@ export default function Overlays({ name }: ExampleProps) {
           <div className="space-y-2" aria-busy={loading}>
             {loading ? (
               <>
-                <Skeleton className="h-9 w-9 rounded-full motion-reduce:animate-none" />
+                {variant !== "Text" && (
+                  <Skeleton
+                    className={
+                      variant === "Card"
+                        ? "h-32 w-full rounded-lg motion-reduce:animate-none"
+                        : "h-9 w-9 rounded-full motion-reduce:animate-none"
+                    }
+                  />
+                )}
                 <Skeleton className="h-3 w-3/4 motion-reduce:animate-none" />
                 <Skeleton className="h-3 w-1/2 motion-reduce:animate-none" />
               </>
@@ -281,6 +347,19 @@ export default function Overlays({ name }: ExampleProps) {
         </>
       )
     case "spinner":
+      if (variant !== "In button")
+        return (
+          <Spinner
+            aria-label="Loading preview"
+            className={
+              variant === "Small"
+                ? "size-3"
+                : variant === "Large"
+                  ? "size-8"
+                  : "size-4"
+            }
+          />
+        )
       return (
         <>
           <Button variant="outline" onClick={() => setLoading(!loading)}>
@@ -309,13 +388,17 @@ export default function Overlays({ name }: ExampleProps) {
           variant="outline"
           onClick={() =>
             toast.add({
-              title: "Preview saved",
-              description: "Your sample action completed successfully.",
-              type: "success",
+              title: `${variant} notification`,
+              description: "This notification is a component preview.",
+              type: choice(
+                variant,
+                ["default", "success", "info", "warning", "error", "loading"],
+                "default"
+              ),
             })
           }
         >
-          <Text>Show success notification</Text>
+          <Text>Show {variant.toLowerCase()} notification</Text>
         </Button>
       )
     case "tooltip":
@@ -324,7 +407,16 @@ export default function Overlays({ name }: ExampleProps) {
           <TooltipTrigger render={<Button variant="outline" />}>
             <Text>Focus or hover for a hint</Text>
           </TooltipTrigger>
-          <TooltipContent>
+          <TooltipContent
+            side={choice(variant, ["top", "bottom", "left", "right"], "top")}
+            align={
+              variant === "Start aligned"
+                ? "start"
+                : variant === "End aligned"
+                  ? "end"
+                  : "center"
+            }
+          >
             <Text>Helpful context without interrupting your task.</Text>
           </TooltipContent>
         </Tooltip>

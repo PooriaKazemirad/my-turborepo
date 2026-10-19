@@ -8,7 +8,9 @@ import {
   Bubble,
   BubbleContent,
   BubbleGroup,
+  BubbleReactions,
 } from "shadcn-ui/components/atomic/bubble"
+import { Spinner } from "shadcn-ui/components/atomic/spinner"
 import { Button } from "shadcn-ui/components/atomic/button"
 import * as Code from "shadcn-ui/components/atomic/code-block"
 import {
@@ -21,6 +23,7 @@ import * as Scroller from "shadcn-ui/components/atomic/message-scroller"
 import * as Q from "shadcn-ui/components/atomic/questionnaire"
 import * as T from "shadcn-ui/components/atomic/trace"
 import type { ExampleProps } from "./registry"
+import { choice } from "./variants"
 import { Note, Text } from "./shared"
 
 const code = 'const greeting = "Hello, workspace!"\nconsole.log(greeting)'
@@ -71,26 +74,64 @@ function SampleMessage({ reply = false }: { reply?: boolean }) {
   )
 }
 
-export default function Conversation({ name }: ExampleProps) {
+export default function Conversation({ name, variant }: ExampleProps) {
   const id = useId()
   const [attached, setAttached] = useState(true)
   const [liked, setLiked] = useState(false)
-  const [replied, setReplied] = useState(false)
-  const [count, setCount] = useState(6)
+  const [replied, setReplied] = useState(variant === "Conversation")
+  const [count, setCount] = useState(variant === "Long history" ? 30 : 6)
   const [submitted, setSubmitted] = useState("")
 
   switch (name) {
     case "attachment":
       return attached ? (
-        <A.Attachment state="done" className="w-full">
-          <A.AttachmentMedia>
-            <FileText aria-hidden="true" />
+        <A.Attachment
+          state={choice(
+            variant,
+            ["idle", "uploading", "processing", "error", "done"],
+            "done"
+          )}
+          size={
+            variant === "Small"
+              ? "sm"
+              : variant === "Extra small"
+                ? "xs"
+                : "default"
+          }
+          orientation={variant === "Vertical" ? "vertical" : "horizontal"}
+          className={variant === "Vertical" ? undefined : "w-full"}
+        >
+          <A.AttachmentMedia variant={variant === "Image" ? "image" : "icon"}>
+            {variant === "Uploading" || variant === "Processing" ? (
+              <Spinner />
+            ) : variant === "Error" ? (
+              <X />
+            ) : variant === "Image" ? (
+              <svg
+                viewBox="0 0 40 40"
+                role="img"
+                aria-label="Sample image"
+                className="size-full bg-secondary"
+              >
+                <circle cx="20" cy="20" r="12" fill="currentColor" />
+              </svg>
+            ) : (
+              <FileText aria-hidden="true" />
+            )}
           </A.AttachmentMedia>
           <A.AttachmentContent>
             <A.AttachmentTitle>
               <Text>Design brief.pdf</Text>
             </A.AttachmentTitle>
-            <A.AttachmentDescription>PDF · 240 KB</A.AttachmentDescription>
+            <A.AttachmentDescription>
+              {variant === "Uploading"
+                ? "Uploading · 45%"
+                : variant === "Processing"
+                  ? "Processing…"
+                  : variant === "Error"
+                    ? "Upload failed. Try again."
+                    : "PDF · 240 KB"}
+            </A.AttachmentDescription>
           </A.AttachmentContent>
           <A.AttachmentActions>
             <Button
@@ -115,10 +156,39 @@ export default function Conversation({ name }: ExampleProps) {
       return (
         <div className="space-y-3">
           <BubbleGroup>
-            <Bubble variant="secondary">
+            <Bubble
+              variant={choice(
+                variant,
+                [
+                  "default",
+                  "secondary",
+                  "muted",
+                  "tinted",
+                  "outline",
+                  "ghost",
+                  "destructive",
+                ],
+                "default"
+              )}
+              align={variant === "End aligned" ? "end" : "start"}
+            >
               <BubbleContent>
                 <Text>Can you review the design?</Text>
               </BubbleContent>
+              {variant.startsWith("Reactions") && (
+                <BubbleReactions
+                  side={variant === "Reactions top" ? "top" : "bottom"}
+                >
+                  <Button
+                    size="xs"
+                    aria-pressed={liked}
+                    onClick={() => setLiked(!liked)}
+                  >
+                    <ThumbsUp />
+                    <Text>{liked ? "2" : "1"}</Text>
+                  </Button>
+                </BubbleReactions>
+              )}
             </Bubble>
             <Bubble align="end">
               <BubbleContent>
@@ -139,7 +209,10 @@ export default function Conversation({ name }: ExampleProps) {
       )
     case "code-block":
       return (
-        <Code.CodeBlock size="sm">
+        <Code.CodeBlock
+          variant={variant === "Destructive" ? "destructive" : "default"}
+          size={variant === "Small" ? "sm" : "default"}
+        >
           <Code.CodeBlockHeader>
             <Code.CodeBlockTitle>
               <Text>greeting.ts</Text>
@@ -152,19 +225,28 @@ export default function Conversation({ name }: ExampleProps) {
             </Code.CodeBlockActions>
           </Code.CodeBlockHeader>
           <Code.CodeBlockContent
-            lineNumbers
+            lineNumbers={variant === "Line numbers"}
+            wrap={variant === "Wrapped"}
             tabIndex={0}
             aria-label="TypeScript sample"
             dir="ltr"
           >
-            {code}
+            {variant === "Wrapped"
+              ? `${code}\n// A longer sample line demonstrates how code wraps inside a narrow component preview without requiring horizontal scrolling.`
+              : code}
           </Code.CodeBlockContent>
         </Code.CodeBlock>
       )
     case "marker":
       return (
         <div className="space-y-3">
-          <Marker variant="separator">
+          <Marker
+            variant={choice(
+              variant,
+              ["default", "separator", "border"],
+              "default"
+            )}
+          >
             <MarkerContent>
               <Text>Today</Text>
             </MarkerContent>
@@ -184,7 +266,7 @@ export default function Conversation({ name }: ExampleProps) {
       return (
         <div className="space-y-3">
           <M.MessageGroup className="gap-4">
-            <SampleMessage />
+            <SampleMessage reply={variant === "End aligned"} />
             {replied && <SampleMessage reply />}
           </M.MessageGroup>
           <Button
@@ -251,7 +333,7 @@ export default function Conversation({ name }: ExampleProps) {
       ) : (
         <Q.Questionnaire
           items={questions}
-          shortcuts="letters"
+          shortcuts={variant === "Numbers" ? "numbers" : "letters"}
           onSubmit={(event) => {
             event.preventDefault()
             const values = new FormData(event.currentTarget)
@@ -314,15 +396,35 @@ export default function Conversation({ name }: ExampleProps) {
     case "trace":
       return (
         <T.Trace>
-          <T.TraceLine>
+          <T.TraceLine
+            status={
+              variant === "Complete" || variant === "Expanded"
+                ? undefined
+                : choice(variant, ["running", "error", "pending"], "pending")
+            }
+          >
             <T.TraceIcon>
-              <Check />
+              {variant === "Running" ? (
+                <Spinner />
+              ) : variant === "Error" ? (
+                <X />
+              ) : (
+                <Check />
+              )}
             </T.TraceIcon>
             <T.TraceTitle>
-              <Text>Loaded design tokens</Text>
+              <Text>
+                {variant === "Running"
+                  ? "Loading design tokens…"
+                  : variant === "Error"
+                    ? "Could not load design tokens"
+                    : variant === "Pending"
+                      ? "Waiting to load design tokens"
+                      : "Loaded design tokens"}
+              </Text>
             </T.TraceTitle>
           </T.TraceLine>
-          <T.TraceCollapsible>
+          <T.TraceCollapsible defaultOpen={variant === "Expanded"}>
             <T.TraceCollapsibleTrigger>
               <T.TraceLine>
                 <T.TraceTitle>

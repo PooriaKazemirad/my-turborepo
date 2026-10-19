@@ -24,10 +24,13 @@ import {
 } from "shadcn-ui/components/atomic/native-select"
 import { Text, Note } from "./shared"
 import type { ExampleProps } from "./registry"
+import { choice } from "./variants"
 
-export default function Navigation({ name }: ExampleProps) {
+export default function Navigation({ name, variant }: ExampleProps) {
   const [message, setMessage] = useState("")
-  const [direction, setDirection] = useState<"ltr" | "rtl">("ltr")
+  const [direction, setDirection] = useState<"ltr" | "rtl">(
+    variant === "Right to left" ? "rtl" : "ltr"
+  )
   const [page, setPage] = useState(1)
   const [selected, setSelected] = useState("overview")
   const [checked, setChecked] = useState(true)
@@ -51,6 +54,14 @@ export default function Navigation({ name }: ExampleProps) {
                 </B.BreadcrumbLink>
               </B.BreadcrumbItem>
               <B.BreadcrumbSeparator />
+              {variant === "Collapsed" && (
+                <>
+                  <B.BreadcrumbItem>
+                    <B.BreadcrumbEllipsis />
+                  </B.BreadcrumbItem>
+                  <B.BreadcrumbSeparator />
+                </>
+              )}
               <B.BreadcrumbItem>
                 <B.BreadcrumbPage>
                   <Text>Projects</Text>
@@ -66,6 +77,9 @@ export default function Navigation({ name }: ExampleProps) {
         <>
           <C.Command className="rounded-lg border">
             <C.CommandInput
+              defaultValue={
+                variant === "Empty" ? "No matching command" : undefined
+              }
               placeholder="Search commands…"
               aria-label="Search preview commands"
             />
@@ -74,7 +88,10 @@ export default function Navigation({ name }: ExampleProps) {
                 <Text>No command found.</Text>
               </C.CommandEmpty>
               <C.CommandGroup heading="Workspace">
-                <C.CommandItem onSelect={() => choose("Open projects")}>
+                <C.CommandItem
+                  disabled={variant === "Disabled item"}
+                  onSelect={() => choose("Open projects")}
+                >
                   <Folder aria-hidden="true" />
                   <Text>Open projects</Text>
                 </C.CommandItem>
@@ -99,7 +116,12 @@ export default function Navigation({ name }: ExampleProps) {
               <Text>Right-click here, or press Shift+F10</Text>
             </Context.ContextMenuTrigger>
             <Context.ContextMenuContent>
-              <Context.ContextMenuItem onClick={() => choose("Open")}>
+              <Context.ContextMenuItem
+                variant={variant === "Destructive" ? "destructive" : "default"}
+                disabled={variant === "Disabled item"}
+                inset={variant === "Inset"}
+                onClick={() => choose("Open")}
+              >
                 <Text>Open project</Text>
               </Context.ContextMenuItem>
               <Context.ContextMenuItem onClick={() => choose("Duplicate")}>
@@ -164,7 +186,12 @@ export default function Navigation({ name }: ExampleProps) {
               <Text>Project actions</Text>
             </D.DropdownMenuTrigger>
             <D.DropdownMenuContent>
-              <D.DropdownMenuItem onClick={() => choose("Rename")}>
+              <D.DropdownMenuItem
+                variant={variant === "Destructive" ? "destructive" : "default"}
+                disabled={variant === "Disabled item"}
+                inset={variant === "Inset"}
+                onClick={() => choose("Rename")}
+              >
                 <Text>Rename project</Text>
               </D.DropdownMenuItem>
               <D.DropdownMenuItem onClick={() => choose("Duplicate")}>
@@ -206,7 +233,14 @@ export default function Navigation({ name }: ExampleProps) {
                 <Text>File</Text>
               </M.MenubarTrigger>
               <M.MenubarContent>
-                <M.MenubarItem onClick={() => choose("New project")}>
+                <M.MenubarItem
+                  variant={
+                    variant === "Destructive" ? "destructive" : "default"
+                  }
+                  disabled={variant === "Disabled item"}
+                  inset={variant === "Inset"}
+                  onClick={() => choose("New project")}
+                >
                   <Text>New project</Text>
                 </M.MenubarItem>
                 <M.MenubarItem onClick={() => choose("Open project")}>
@@ -249,7 +283,15 @@ export default function Navigation({ name }: ExampleProps) {
     case "navigation-menu":
       return (
         <>
-          <N.NavigationMenu>
+          <N.NavigationMenu
+            align={
+              variant === "Center aligned"
+                ? "center"
+                : variant === "End aligned"
+                  ? "end"
+                  : "start"
+            }
+          >
             <N.NavigationMenuList>
               <N.NavigationMenuItem>
                 <N.NavigationMenuTrigger>
@@ -286,6 +328,18 @@ export default function Navigation({ name }: ExampleProps) {
         <>
           <P.Pagination aria-label="Preview result pages">
             <P.PaginationContent>
+              {variant === "Previous and next" && (
+                <P.PaginationItem>
+                  <P.PaginationPrevious
+                    href="#component-library"
+                    aria-disabled={page === 1}
+                    onClick={(event) => {
+                      event.preventDefault()
+                      setPage(Math.max(1, page - 1))
+                    }}
+                  />
+                </P.PaginationItem>
+              )}
               {[1, 2, 3].map((number) => (
                 <P.PaginationItem key={number}>
                   <P.PaginationLink
@@ -301,6 +355,23 @@ export default function Navigation({ name }: ExampleProps) {
                   </P.PaginationLink>
                 </P.PaginationItem>
               ))}
+              {variant === "Ellipsis" && (
+                <P.PaginationItem>
+                  <P.PaginationEllipsis />
+                </P.PaginationItem>
+              )}
+              {variant === "Previous and next" && (
+                <P.PaginationItem>
+                  <P.PaginationNext
+                    href="#component-library"
+                    aria-disabled={page === 3}
+                    onClick={(event) => {
+                      event.preventDefault()
+                      setPage(Math.min(3, page + 1))
+                    }}
+                  />
+                </P.PaginationItem>
+              )}
             </P.PaginationContent>
           </P.Pagination>
           <Note>
@@ -311,8 +382,20 @@ export default function Navigation({ name }: ExampleProps) {
     case "sidebar":
       return (
         <>
-          <S.SidebarProvider className="min-h-0">
-            <S.Sidebar collapsible="none" className="w-full rounded-lg border">
+          <S.SidebarProvider
+            className="relative isolate min-h-72 overflow-hidden rounded-lg border [contain:layout]"
+            style={{ "--sidebar-width": "12rem" } as React.CSSProperties}
+          >
+            <S.Sidebar
+              variant={choice(
+                variant,
+                ["sidebar", "floating", "inset"],
+                "sidebar"
+              )}
+              side={variant === "Right" ? "right" : "left"}
+              collapsible={variant === "Icon collapse" ? "icon" : "offcanvas"}
+              className="absolute h-full"
+            >
               <S.SidebarHeader>
                 <Text>Preview workspace</Text>
               </S.SidebarHeader>
@@ -331,6 +414,16 @@ export default function Navigation({ name }: ExampleProps) {
                     {["overview", "projects"].map((value) => (
                       <S.SidebarMenuItem key={value}>
                         <S.SidebarMenuButton
+                          variant={
+                            variant === "Menu outline" ? "outline" : "default"
+                          }
+                          size={
+                            variant === "Menu small"
+                              ? "sm"
+                              : variant === "Menu large"
+                                ? "lg"
+                                : "default"
+                          }
                           isActive={selected === value}
                           onClick={() => setSelected(value)}
                         >
@@ -358,6 +451,9 @@ export default function Navigation({ name }: ExampleProps) {
                             <S.SidebarMenuSub>
                               <S.SidebarMenuSubItem>
                                 <S.SidebarMenuSubButton
+                                  size={
+                                    variant === "Submenu small" ? "sm" : "md"
+                                  }
                                   href="#component-library"
                                   isActive={selected === "all projects"}
                                   onClick={(event) => {
@@ -377,6 +473,12 @@ export default function Navigation({ name }: ExampleProps) {
                 </S.SidebarGroup>
               </S.SidebarContent>
             </S.Sidebar>
+            <S.SidebarInset>
+              <div className="p-3">
+                <S.SidebarTrigger />
+                <Note>Toggle the sample navigation.</Note>
+              </div>
+            </S.SidebarInset>
           </S.SidebarProvider>
           <Note>
             Active view: {selected}
@@ -386,12 +488,18 @@ export default function Navigation({ name }: ExampleProps) {
       )
     case "tabs":
       return (
-        <Tabs defaultValue="overview">
-          <TabsList aria-label="Project views">
+        <Tabs
+          defaultValue="overview"
+          orientation={variant === "Vertical" ? "vertical" : "horizontal"}
+        >
+          <TabsList
+            variant={variant === "Line" ? "line" : "default"}
+            aria-label="Project views"
+          >
             <TabsTrigger value="overview">
               <Text>Overview</Text>
             </TabsTrigger>
-            <TabsTrigger value="activity">
+            <TabsTrigger value="activity" disabled={variant === "Disabled tab"}>
               <Text>Activity</Text>
             </TabsTrigger>
           </TabsList>

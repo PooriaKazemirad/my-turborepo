@@ -40,13 +40,13 @@ import {
   tokenGroups,
   typographyTokens,
 } from "shadcn-ui/lib/design-tokens"
-import { AppShell } from "./app-shell"
+import { DesignSystemShell } from "./design-system-shell"
 import { ComponentCatalog } from "./component-catalog"
 import { shadcnComponents } from "shadcn-ui/lib/component-catalog"
 import { Typography } from "shadcn-ui/components/atomic/typography"
 import { DirectionSwitcher, useWorkspaceDirection } from "./workspace-direction"
 
-export function DesignSystem() {
+export function DesignSystem({ dashboardUrl }: { dashboardUrl: string }) {
   const { direction } = useWorkspaceDirection()
   const [values, setValues] = useState<Record<string, string>>({})
   const [tab, setTab] = useState("Foundations")
@@ -120,11 +120,11 @@ export function DesignSystem() {
   }
 
   return (
-    <AppShell>
+    <DesignSystemShell dashboardUrl={dashboardUrl}>
       <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
         <div>
           <Link
-            href="/"
+            href={dashboardUrl}
             className="mb-4 inline-flex items-center gap-1.5 text-label text-muted-foreground hover:text-foreground"
           >
             <ArrowLeft className="size-3.5 rtl:rotate-180" />
@@ -968,6 +968,6 @@ export function DesignSystem() {
           </div>
         )}
       </div>
-    </AppShell>
+    </DesignSystemShell>
   )
 }

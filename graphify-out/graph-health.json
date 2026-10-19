@@ -1,25 +1,25 @@
 {
-  "node_count": 1216,
+  "node_count": 1366,
   "unverified_node_count": 0,
-  "raw_edge_count": 2857,
+  "raw_edge_count": 3099,
   "non_object_edges": 0,
   "missing_endpoint_edges": 0,
-  "dangling_endpoint_edges": 261,
+  "dangling_endpoint_edges": 274,
   "self_loop_edges": 0,
-  "valid_candidate_edges": 2596,
+  "valid_candidate_edges": 2825,
   "exact_duplicate_edges": 18,
-  "directed_unique_endpoint_pairs": 2546,
-  "directed_same_endpoint_collapsed_edges": 50,
-  "undirected_unique_endpoint_pairs": 2546,
-  "undirected_same_endpoint_collapsed_edges": 50,
-  "same_endpoint_group_count": 50,
-  "relation_variant_groups": 29,
+  "directed_unique_endpoint_pairs": 2772,
+  "directed_same_endpoint_collapsed_edges": 53,
+  "undirected_unique_endpoint_pairs": 2772,
+  "undirected_same_endpoint_collapsed_edges": 53,
+  "same_endpoint_group_count": 53,
+  "relation_variant_groups": 32,
   "source_file_variant_groups": 0,
   "source_location_variant_groups": 3,
   "context_variant_groups": 0,
   "post_build_graph_type": "Graph",
-  "post_build_node_count": 1216,
-  "post_build_edge_count": 2546,
+  "post_build_node_count": 1366,
+  "post_build_edge_count": 2772,
   "post_build_error": "",
   "producer_suppression": {
     "path": "C:\\Users\\PKA\\AppData\\Roaming\\uv\\tools\\graphifyy\\Lib\\site-packages\\graphify\\extract.py",
@@ -113,8 +113,8 @@
         "apps/dashboard/components/dashboard/app-shell.tsx"
       ],
       "source_locations": [
-        "L281",
-        "L287"
+        "L255",
+        "L261"
       ],
       "contexts": [
         "",
@@ -122,70 +122,82 @@
       ]
     },
     {
-      "source": "apps_dashboard_components_dashboard_chart_examples",
-      "target": "packages_shadcn_ui_src_components_molecules_charts_cartesian_chart_barchart",
+      "source": "apps_dashboard_components_dashboard_dashboard",
+      "target": "apps_dashboard_components_dashboard_dashboard_layersicon",
       "edge_count": 2,
       "relations": [
-        "imports"
+        "contains",
+        "indirect_call"
       ],
       "source_files": [
-        "apps/dashboard/components/dashboard/chart-examples.tsx"
+        "apps/dashboard/components/dashboard/dashboard.tsx"
       ],
       "source_locations": [
-        "L14"
+        "L125",
+        "L154"
       ],
       "contexts": [
-        "import"
+        "",
+        "collection"
       ]
     },
     {
-      "source": "apps_dashboard_components_dashboard_chart_examples",
-      "target": "packages_shadcn_ui_src_components_molecules_charts_cartesian_chart_areachart",
+      "source": "apps_dashboard_components_dashboard_orders_table_orderstable",
+      "target": "apps_dashboard_components_dashboard_orders_table_orderstable_sortby",
       "edge_count": 2,
       "relations": [
-        "imports"
+        "calls",
+        "contains"
       ],
       "source_files": [
-        "apps/dashboard/components/dashboard/chart-examples.tsx"
+        "apps/dashboard/components/dashboard/orders-table.tsx"
       ],
       "source_locations": [
-        "L15"
+        "L170",
+        "L74"
       ],
       "contexts": [
-        "import"
+        "",
+        "call"
       ]
     },
     {
-      "source": "apps_dashboard_components_dashboard_chart_examples",
-      "target": "packages_shadcn_ui_src_components_molecules_charts_cartesian_chart_linechart",
+      "source": "apps_dashboard_components_dashboard_workspace_direction_workspacedirectionprovider",
+      "target": "apps_dashboard_components_dashboard_workspace_direction_workspacedirectionprovider_setdirection",
       "edge_count": 2,
       "relations": [
-        "imports"
+        "contains",
+        "indirect_call"
       ],
       "source_files": [
-        "apps/dashboard/components/dashboard/chart-examples.tsx"
+        "apps/dashboard/components/dashboard/workspace-direction.tsx"
       ],
       "source_locations": [
-        "L16"
+        "L24",
+        "L31"
       ],
       "contexts": [
-        "import"
+        "",
+        "collection"
       ]
     },
     {
-      "source": "apps_dashboard_components_dashboard_chart_examples",
-      "target": "packages_shadcn_ui_src_components_molecules_charts_polar_chart_piechart",
+      "source": "apps_dashboard_eslint_config",
+      "target": "packages_eslint_config_next",
       "edge_count": 2,
       "relations": [
-        "imports"
+        "imports_from",
+        "re_exports"
       ],
       "source_files": [
-        "apps/dashboard/components/dashboard/chart-examples.tsx"
+        "apps/dashboard/eslint.config.ts"
       ],
       "source_locations": [
-        "L17"
+        "L2",
+        "L6"
       ],
       "contexts": [
+        "export",
         "import"
       ]
     }

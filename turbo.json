@@ -1,5 +1,5 @@
 {
-  "$schema": "https://turborepo.dev/schema.json",
+  "$schema": "./node_modules/turbo/schema.json",
   "ui": "tui",
   "tasks": {
     "build": {
@@ -21,5 +21,6 @@
       "cache": false,
       "persistent": true
     }
-  }
+  },
+  "globalEnv": ["DESIGN_SYSTEM_URL", "DASHBOARD_URL"]
 }

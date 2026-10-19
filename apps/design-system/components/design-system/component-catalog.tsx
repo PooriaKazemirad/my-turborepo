@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { ChartExamples } from "./chart-examples"
 import { ComponentExample } from "./component-examples"
+import { exampleVariants } from "./component-examples/variants"
 import { ArrowUpRight, Check, Copy, Search } from "lucide-react"
 import {
   Accordion,
@@ -488,7 +489,7 @@ export function ComponentCatalog() {
       <Panel id="component-library">
         <PanelHeader
           title="The complete component library"
-          description={`${shadcnComponents.length} installed shadcn components with live examples. Search by name or browse a category.`}
+          description={`${shadcnComponents.length} components with ${Object.values(exampleVariants).reduce((count, variants) => count + variants.length, 0)} variants and states. Use each preview's selector to explore styles, sizes, and behavior.`}
           action={
             <Typography
               color="muted-foreground"
@@ -529,9 +530,12 @@ export function ComponentCatalog() {
             ))}
           </select>
         </div>
-        <div className="grid gap-3 p-5 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="grid items-start gap-5 p-5 xl:grid-cols-2">
           {visibleComponents.map((name) => (
-            <article key={name} className="min-w-0 rounded-lg border p-4">
+            <article
+              key={name}
+              className="flex min-w-0 flex-col rounded-xl border bg-card p-5"
+            >
               <div className="flex items-start justify-between gap-2">
                 <Typography
                   color="foreground"

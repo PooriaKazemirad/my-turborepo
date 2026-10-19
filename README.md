@@ -4,19 +4,20 @@ A pnpm and Turborepo workspace with Next.js App Router, TypeScript, Tailwind CSS
 
 ## Get started
 
-Use Node.js 22.14 or newer and pnpm 10.31.0 (pinned in `package.json`).
+Use Node.js 22.14 or newer and pnpm 12.14.0 (pinned in `package.json`).
 
 ```sh
 pnpm install
 pnpm dev
 ```
 
-Open [the dashboard](http://localhost:3000) or the [design system explorer](http://localhost:3000/design-system).
+Open [the dashboard](http://localhost:3000) or the [design system explorer](http://localhost:3001).
 
 ## Workspace
 
 ```text
-apps/dashboard                Next.js application
+apps/dashboard                Dashboard Next.js application
+apps/design-system            Standalone design system Next.js application
 packages/shadcn-ui                   Shared shadcn/ui components and theme styles
 packages/eslint-config        Shared ESLint configuration
 packages/typescript-config    Shared strict TypeScript configuration
@@ -30,8 +31,8 @@ Run these from the repository root:
 
 | Command                         | Purpose                                             |
 | ------------------------------- | --------------------------------------------------- |
-| `pnpm dev`                      | Start the dashboard app in development mode         |
-| `pnpm build`                    | Build the app, with local Turbo caching             |
+| `pnpm dev`                      | Start both apps in development mode                 |
+| `pnpm build`                    | Build both apps, with local Turbo caching           |
 | `pnpm lint`                     | Lint the app and shared UI; warnings fail the check |
 | `pnpm typecheck`                | Generate Next.js route types and check TypeScript   |
 | `pnpm format`                   | Format the repository                               |
@@ -39,6 +40,8 @@ Run these from the repository root:
 | `pnpm --filter dashboard start` | Serve the production app after a build              |
 
 Development servers are persistent and uncached. Production build outputs are cached, excluding Next.js's own cache and development artifacts. The formatter always runs directly, so it never caches file changes.
+
+Start one app with `pnpm dev:dashboard` or `pnpm dev:design-system`. The design system uses port 3001 in development and production. See [its setup guide](apps/design-system/README.md) for dependency details and deployment URL settings. Existing dashboard `/design-system` links redirect to the standalone app.
 
 ## Git hooks
 
@@ -57,7 +60,7 @@ The `shadcn-ui` workspace package lives in [packages/shadcn-ui](packages/shadcn-
 pnpm dlx shadcn@latest add dialog --cwd apps/dashboard
 ```
 
-Both workspaces have `components.json` configured so the CLI installs reusable components in `packages/shadcn-ui` and resolves their imports correctly.
+The apps and shared UI workspace have `components.json` configured so the CLI installs reusable components in `packages/shadcn-ui` and resolves their imports correctly.
 
 ```tsx
 import { Button } from "shadcn-ui/components/atomic/button"
@@ -68,7 +71,7 @@ import { Button } from "shadcn-ui/components/atomic/button"
 The app supports **Light**, **Dark**, and **System**. It defaults to Light and remembers explicit selections in local storage through `next-themes`. Selecting System follows device changes.
 
 - Change shared tokens in `packages/shadcn-ui/src/styles/tokens.css` under `:root` and `.dark`. The global stylesheet maps them to Tailwind utilities.
-- The shared `ThemeProvider` is mounted once in `apps/dashboard/app/layout.tsx`.
+- The shared `ThemeProvider` is mounted once in each app's root layout.
 - The shared `ThemeSwitcher` uses labeled buttons with pressed states.
 - The root layout suppresses the expected theme attribute hydration warning. Theme controls use a stable server snapshot during hydration, and the theme initialization script applies the saved preference before paint.
 

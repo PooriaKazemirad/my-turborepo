@@ -2,6 +2,8 @@
 
 The dashboard translates the [Modern Admin Dashboard reference](https://demos.shadcndashboard.dev/dashboards/modern) into an original implementation in the existing Next.js monorepo. Its public [Next.js implementation](https://github.com/shadcndashboard/next-shadcn-dashboard) and live stylesheet assets informed the analysis. The reference's direct browser connection failed during inspection, so this is a reference-informed implementation rather than a verified pixel-for-pixel copy.
 
+The explorer is a standalone Next.js app at `apps/design-system`, served at [http://localhost:3001](http://localhost:3001). Run `pnpm dev:design-system` to start it independently. The dashboard retains a `/design-system` redirect. Both apps consume the shared `shadcn-ui` workspace package; see [app setup](../apps/design-system/README.md).
+
 ## Reference analysis
 
 | Pattern    | Reference observation                                                | Implementation                                                               |
@@ -196,11 +198,11 @@ Application and shared Typography instances declare their color explicitly. Use 
 
 ## Component examples
 
-The **Components** tab at `/design-system` includes a live example for each of the 63 installed shadcn components. Use the library search and category filter, then choose **Show example** on a component card. Documentation and copyable import paths remain alongside each preview.
+The **Components** tab at `/design-system` includes a live example for each of the 63 installed shadcn components. Use the library search and category filter, then choose a variant in each visible component preview. Documentation and copyable import paths remain alongside each preview.
 
 Examples include form validation, searchable selections, navigation, sortable tables, resizable panels, menus, dialogs, loading feedback, and conversation components. The questionnaire has two steps; the message scroller can append sample messages; attachment removal can be reversed. All changes stay in the preview and reset when it is closed.
 
-Previews mount on demand and load in separate control, layout, navigation, overlay, and conversation groups. The typed registry in `apps/dashboard/components/dashboard/component-examples/registry.ts` requires every installed component to have an example group. Keep new examples in the corresponding module and use shared Typography, color tokens, and accessible labels. Static examples demonstrate appearance; interactive examples expose local state and feedback.
+Previews are visible immediately, with 288 selectable variants and states, and load in separate control, layout, navigation, overlay, and conversation groups. The typed registry in `apps/design-system/components/design-system/component-examples/registry.ts` requires every installed component to have an example group. Keep new examples in the corresponding module and use shared Typography, color tokens, and accessible labels. Static examples demonstrate appearance; interactive examples expose local state and feedback.
 
 Menus and selections support keyboard navigation. Dialogs support Escape and restore focus to their trigger. The context-menu example opens with a right click or Shift+F10. Examples inherit light/dark appearance and page direction; the Direction example changes only its own content.
 

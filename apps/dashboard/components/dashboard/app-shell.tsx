@@ -21,7 +21,6 @@ import {
   LayoutDashboard,
   Layers,
   Menu,
-  Palette,
   PanelLeftClose,
   Search,
   Settings2,
@@ -55,22 +54,6 @@ const navigation = [
       { title: "Orders", icon: Box, href: "/#orders", badge: "8" },
       { title: "Customers", icon: Users, href: "/#customers" },
       { title: "Transactions", icon: CreditCard, href: "/#activity" },
-    ],
-  },
-  {
-    label: "RESOURCES",
-    items: [
-      {
-        title: "Design system",
-        icon: Palette,
-        href: "/design-system",
-        badge: "New",
-      },
-      {
-        title: "Documentation",
-        icon: BookOpen,
-        href: "/design-system#foundations",
-      },
     ],
   },
 ]
@@ -198,15 +181,6 @@ function SidebarContent({
           >
             All your numbers. One workspace.
           </Typography>
-          <Link
-            href="/design-system"
-            className="mt-3 flex items-center justify-between text-label font-medium text-foreground"
-          >
-            <Typography color="inherit" as="span" variant="inherit">
-              Explore the system
-            </Typography>{" "}
-            <ArrowUpRight className="size-3.5" />
-          </Link>
         </div>
       )}
       <div className="border-t p-3">

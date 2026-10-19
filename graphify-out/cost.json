@@ -7,10 +7,20 @@
       "token_counts_available": false,
       "files": 155,
       "note": "Collaboration interface provides no real usage counts."
+    },
+    {
+      "date": "2026-10-19T17:01:33.355486+00:00",
+      "input_tokens": null,
+      "output_tokens": null,
+      "token_counts_available": false,
+      "files": 168,
+      "semantic_cache_hits": 5,
+      "semantic_new_files": 4,
+      "note": "Actual semantic token usage unavailable from collaboration interface."
     }
   ],
   "total_input_tokens": 0,
   "total_output_tokens": 0,
   "token_totals_scope": "measured_runs_only",
-  "unmetered_runs": 1
+  "unmetered_runs": 2
 }

@@ -1,7 +1,7 @@
 import type { shadcnComponents } from "shadcn-ui/lib/component-catalog"
 
 export type ExampleName = (typeof shadcnComponents)[number]
-export type ExampleProps = { name: ExampleName }
+export type ExampleProps = { name: ExampleName; variant: string }
 export type ExampleGroup =
   "controls" | "layout" | "navigation" | "overlays" | "conversation"
 

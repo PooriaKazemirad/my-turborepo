@@ -1,7 +1,8 @@
 "use client"
 
 import { useId, useState } from "react"
-import { Bold, Italic, Search, Underline } from "lucide-react"
+import { Bold, Italic, Search, Underline, Plus } from "lucide-react"
+import { Spinner } from "shadcn-ui/components/atomic/spinner"
 import { Button } from "shadcn-ui/components/atomic/button"
 import { ButtonGroup } from "shadcn-ui/components/atomic/button-group"
 import { Checkbox } from "shadcn-ui/components/atomic/checkbox"
@@ -15,6 +16,9 @@ import {
 } from "shadcn-ui/components/atomic/combobox"
 import {
   Field,
+  FieldGroup,
+  FieldSet,
+  FieldLegend,
   FieldLabel,
   FieldDescription,
   FieldError,
@@ -24,16 +28,20 @@ import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
+  InputGroupTextarea,
+  InputGroupButton,
 } from "shadcn-ui/components/atomic/input-group"
 import {
   InputOTP,
   InputOTPGroup,
+  InputOTPSeparator,
   InputOTPSlot,
 } from "shadcn-ui/components/atomic/input-otp"
 import { Label } from "shadcn-ui/components/atomic/label"
 import {
   NativeSelect,
   NativeSelectOption,
+  NativeSelectOptGroup,
 } from "shadcn-ui/components/atomic/native-select"
 import {
   RadioGroup,
@@ -56,18 +64,29 @@ import {
 } from "shadcn-ui/components/atomic/toggle-group"
 import { Note, Text } from "./shared"
 import type { ExampleProps } from "./registry"
+import { choice as variantChoice } from "./variants"
 
-export default function Controls({ name }: ExampleProps) {
+export default function Controls({ name, variant }: ExampleProps) {
   const id = useId()
   const [message, setMessage] = useState("")
-  const [checked, setChecked] = useState(true)
-  const [text, setText] = useState("")
+  const [checked, setChecked] = useState(
+    variant === "Checked" || variant === "On" || variant === "Pressed"
+  )
+  const [text, setText] = useState(
+    variant === "Read only" ? "Saved project notes" : ""
+  )
   const [choice, setChoice] = useState("monthly")
   const [framework, setFramework] = useState<string | null>(null)
   const [formats, setFormats] = useState<string[]>(["bold"])
-  const [amount, setAmount] = useState<number[]>([40])
+  const [amount, setAmount] = useState<number[]>(
+    variant === "Range" ? [20, 70] : [40]
+  )
   const [otp, setOtp] = useState("")
-  const [touched, setTouched] = useState(false)
+  const [touched, setTouched] = useState(variant === "Invalid")
+  const disabled = variant === "Disabled"
+  const invalid = variant === "Invalid"
+  const size =
+    variant === "Small" ? "sm" : variant === "Large" ? "lg" : "default"
 
   switch (name) {
     case "button":
@@ -75,9 +94,43 @@ export default function Controls({ name }: ExampleProps) {
         <>
           <div className="flex flex-wrap gap-2">
             <Button
+              variant={variantChoice(
+                variant,
+                [
+                  "default",
+                  "outline",
+                  "secondary",
+                  "ghost",
+                  "destructive",
+                  "link",
+                ],
+                "default"
+              )}
+              size={
+                variant === "Extra small"
+                  ? "xs"
+                  : variant === "Icon extra small"
+                    ? "icon-xs"
+                    : variant === "Icon small"
+                      ? "icon-sm"
+                      : variant === "Icon large"
+                        ? "icon-lg"
+                        : variant === "Icon"
+                          ? "icon"
+                          : size
+              }
+              disabled={disabled || variant === "Loading"}
+              aria-label={
+                variant.startsWith("Icon") ? "Add project" : undefined
+              }
               onClick={() => setMessage("Changes saved in this preview.")}
             >
-              <Text>Save</Text>
+              {variant === "Loading" && <Spinner />}
+              {variant.startsWith("Icon") ? (
+                <Plus />
+              ) : (
+                <Text>{variant === "Loading" ? "Saving…" : "Save"}</Text>
+              )}
             </Button>
             <Button
               variant="outline"
@@ -95,7 +148,10 @@ export default function Controls({ name }: ExampleProps) {
     case "button-group":
       return (
         <>
-          <ButtonGroup aria-label="Preview zoom">
+          <ButtonGroup
+            orientation={variant === "Vertical" ? "vertical" : "horizontal"}
+            aria-label="Preview zoom"
+          >
             <Button
               variant="outline"
               aria-label="Zoom out"
@@ -121,21 +177,56 @@ export default function Controls({ name }: ExampleProps) {
       return (
         <>
           <div className="flex items-center gap-2">
-            <Checkbox id={id} checked={checked} onCheckedChange={setChecked} />
+            <Checkbox
+              id={id}
+              checked={checked}
+              onCheckedChange={setChecked}
+              indeterminate={variant === "Indeterminate"}
+              disabled={disabled}
+              aria-invalid={invalid}
+            />
             <Label htmlFor={id}>Receive project updates</Label>
           </div>
-          <Note>{checked ? "Updates enabled." : "Updates disabled."}</Note>
+          <Note>
+            {variant === "Indeterminate"
+              ? "Some updates selected."
+              : checked
+                ? "Updates enabled."
+                : "Updates disabled."}
+          </Note>
         </>
       )
     case "combobox":
+      if (variant === "Multiple")
+        return (
+          <Combobox multiple items={["React", "Vue", "Svelte"]}>
+            <ComboboxInput
+              aria-label="Choose frameworks"
+              placeholder="Choose multiple frameworks"
+            />
+            <ComboboxContent>
+              <ComboboxList>
+                {(item: string) => (
+                  <ComboboxItem key={item} value={item}>
+                    {item}
+                  </ComboboxItem>
+                )}
+              </ComboboxList>
+            </ComboboxContent>
+          </Combobox>
+        )
       return (
         <>
           <Combobox
-            items={["Next.js", "React", "Vue", "Svelte"]}
+            disabled={disabled}
+            items={
+              variant === "Empty" ? [] : ["Next.js", "React", "Vue", "Svelte"]
+            }
             value={framework}
             onValueChange={setFramework}
           >
             <ComboboxInput
+              aria-invalid={invalid}
               aria-label="Choose a framework"
               placeholder="Find a framework…"
               showClear
@@ -162,28 +253,46 @@ export default function Controls({ name }: ExampleProps) {
       )
     case "field":
       return (
-        <Field data-invalid={(touched && !text.trim()) || undefined}>
-          <FieldLabel htmlFor={id}>
-            <Text>Workspace name</Text>
-          </FieldLabel>
-          <Input
-            id={id}
-            value={text}
-            onChange={(event) => setText(event.target.value)}
-            onBlur={() => setTouched(true)}
-            aria-invalid={touched && !text.trim()}
-            aria-describedby={`${id}-description${touched && !text.trim() ? ` ${id}-error` : ""}`}
-            placeholder="e.g. Product team"
-          />
-          <FieldDescription id={`${id}-description`}>
-            Choose a recognizable name.
-          </FieldDescription>
-          {touched && !text.trim() && (
-            <FieldError id={`${id}-error`}>
-              <Text>A workspace name is required.</Text>
-            </FieldError>
-          )}
-        </Field>
+        <FieldSet>
+          <FieldLegend
+            variant={variant === "Label legend" ? "label" : "legend"}
+          >
+            Workspace details
+          </FieldLegend>
+          <FieldGroup>
+            <Field
+              orientation={variantChoice(
+                variant,
+                ["vertical", "horizontal", "responsive"],
+                "vertical"
+              )}
+              data-disabled={disabled || undefined}
+              data-invalid={(touched && !text.trim()) || undefined}
+            >
+              <FieldLabel htmlFor={id}>
+                <Text>Workspace name</Text>
+              </FieldLabel>
+              <Input
+                id={id}
+                disabled={disabled}
+                value={text}
+                onChange={(event) => setText(event.target.value)}
+                onBlur={() => setTouched(true)}
+                aria-invalid={touched && !text.trim()}
+                aria-describedby={`${id}-description${touched && !text.trim() ? ` ${id}-error` : ""}`}
+                placeholder="e.g. Product team"
+              />
+              <FieldDescription id={`${id}-description`}>
+                Choose a recognizable name.
+              </FieldDescription>
+              {touched && !text.trim() && (
+                <FieldError id={`${id}-error`}>
+                  <Text>A workspace name is required.</Text>
+                </FieldError>
+              )}
+            </Field>
+          </FieldGroup>
+        </FieldSet>
       )
     case "input":
       return (
@@ -191,21 +300,63 @@ export default function Controls({ name }: ExampleProps) {
           <Label htmlFor={id}>Project name</Label>
           <Input
             id={id}
-            value={text}
+            value={variant === "File" ? undefined : text}
             onChange={(event) => setText(event.target.value)}
+            disabled={disabled}
+            aria-invalid={invalid}
+            readOnly={variant === "Read only"}
+            type={variantChoice(
+              variant,
+              ["password", "email", "number", "file", "text"],
+              "text"
+            )}
             placeholder="Enter a project name"
           />
           <Note>{text ? `Draft: ${text}` : "Type to update the draft."}</Note>
         </>
       )
     case "input-group":
+      if (variant === "Textarea")
+        return (
+          <InputGroup>
+            <InputGroupTextarea
+              aria-label="Project description"
+              placeholder="Describe your project…"
+            />
+            <InputGroupAddon align="block-end">
+              Markdown supported
+            </InputGroupAddon>
+          </InputGroup>
+        )
       return (
         <>
           <InputGroup>
-            <InputGroupAddon>
-              <Search aria-hidden="true" />
+            <InputGroupAddon
+              align={variantChoice(
+                variant,
+                ["inline-start", "inline-end", "block-start", "block-end"],
+                "inline-start"
+              )}
+            >
+              {variant.startsWith("Button ") ? (
+                <InputGroupButton
+                  size={variantChoice(
+                    variant.slice(7),
+                    ["xs", "sm", "icon-xs", "icon-sm"],
+                    "xs"
+                  )}
+                  aria-label="Search projects"
+                  onClick={() => setText("Design system")}
+                >
+                  {variant.includes("icon") ? <Search /> : "Search"}
+                </InputGroupButton>
+              ) : (
+                <Search aria-hidden="true" />
+              )}
             </InputGroupAddon>
             <InputGroupInput
+              disabled={disabled}
+              aria-invalid={invalid}
               aria-label="Search project names"
               value={text}
               onChange={(event) => setText(event.target.value)}
@@ -225,16 +376,27 @@ export default function Controls({ name }: ExampleProps) {
           <Label htmlFor={id}>Verification code</Label>
           <InputOTP
             id={id}
+            disabled={disabled}
+            aria-invalid={invalid}
             maxLength={4}
             value={otp}
             onChange={setOtp}
             aria-describedby={`${id}-hint`}
           >
             <InputOTPGroup>
-              {[0, 1, 2, 3].map((index) => (
+              {(variant === "Grouped" ? [0, 1] : [0, 1, 2, 3]).map((index) => (
                 <InputOTPSlot key={index} index={index} />
               ))}
             </InputOTPGroup>
+            {variant === "Grouped" && (
+              <>
+                <InputOTPSeparator />
+                <InputOTPGroup>
+                  <InputOTPSlot index={2} />
+                  <InputOTPSlot index={3} />
+                </InputOTPGroup>
+              </>
+            )}
           </InputOTP>
           <Note id={`${id}-hint`}>
             {otp.length === 4
@@ -246,8 +408,15 @@ export default function Controls({ name }: ExampleProps) {
     case "label":
       return (
         <>
-          <Label htmlFor={id}>Click this label to focus the input</Label>
-          <Input id={id} placeholder="Linked input" />
+          <Label htmlFor={id}>
+            Project name {variant === "Required" && "(required)"}
+          </Label>
+          <Input
+            id={id}
+            disabled={disabled}
+            required={variant === "Required"}
+            placeholder="Linked input"
+          />
         </>
       )
     case "native-select":
@@ -255,6 +424,9 @@ export default function Controls({ name }: ExampleProps) {
         <>
           <Label htmlFor={id}>Report frequency</Label>
           <NativeSelect
+            size={variant === "Small" ? "sm" : "default"}
+            disabled={disabled}
+            aria-invalid={invalid}
             id={id}
             value={choice}
             onChange={(event) => setChoice(event.target.value)}
@@ -264,6 +436,12 @@ export default function Controls({ name }: ExampleProps) {
                 {value}
               </NativeSelectOption>
             ))}
+            {variant === "Grouped" && (
+              <NativeSelectOptGroup label="Custom">
+                <NativeSelectOption value="weekly">Weekly</NativeSelectOption>
+                <NativeSelectOption value="daily">Daily</NativeSelectOption>
+              </NativeSelectOptGroup>
+            )}
           </NativeSelect>
           <Note>Frequency: {choice}</Note>
         </>
@@ -272,6 +450,11 @@ export default function Controls({ name }: ExampleProps) {
       return (
         <>
           <RadioGroup
+            disabled={disabled}
+            aria-invalid={invalid}
+            className={
+              variant === "Horizontal" ? "flex flex-wrap gap-4" : undefined
+            }
             aria-label="Workspace plan"
             value={choice}
             onValueChange={(value) => setChoice(String(value))}
@@ -296,6 +479,7 @@ export default function Controls({ name }: ExampleProps) {
       return (
         <>
           <Select
+            disabled={disabled}
             items={[
               { value: "monthly", label: "Monthly" },
               { value: "yearly", label: "Yearly" },
@@ -303,7 +487,12 @@ export default function Controls({ name }: ExampleProps) {
             value={choice}
             onValueChange={(value) => value && setChoice(value)}
           >
-            <SelectTrigger aria-label="Choose report period" className="w-full">
+            <SelectTrigger
+              size={variant === "Small" ? "sm" : "default"}
+              aria-invalid={invalid}
+              aria-label="Choose report period"
+              className="w-full"
+            >
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -323,6 +512,9 @@ export default function Controls({ name }: ExampleProps) {
         <>
           <Label id={`${id}-label`}>Volume</Label>
           <Slider
+            disabled={disabled}
+            orientation={variant === "Vertical" ? "vertical" : "horizontal"}
+            className={variant === "Vertical" ? "h-40" : undefined}
             aria-labelledby={`${id}-label`}
             value={amount}
             onValueChange={(value) =>
@@ -331,7 +523,7 @@ export default function Controls({ name }: ExampleProps) {
             min={0}
             max={100}
           />
-          <Note>Volume: {amount[0]}%</Note>
+          <Note>Volume: {amount.join(" – ")}%</Note>
         </>
       )
     case "switch":
@@ -339,7 +531,13 @@ export default function Controls({ name }: ExampleProps) {
         <>
           <div className="flex items-center justify-between gap-2">
             <Label htmlFor={id}>Email notifications</Label>
-            <Switch id={id} checked={checked} onCheckedChange={setChecked} />
+            <Switch
+              id={id}
+              size={variant === "Small" ? "sm" : "default"}
+              disabled={disabled}
+              checked={checked}
+              onCheckedChange={setChecked}
+            />
           </div>
           <Note>Notifications {checked ? "on" : "off"}.</Note>
         </>
@@ -351,6 +549,9 @@ export default function Controls({ name }: ExampleProps) {
           <Textarea
             id={id}
             value={text}
+            disabled={disabled}
+            aria-invalid={invalid}
+            readOnly={variant === "Read only"}
             maxLength={160}
             onChange={(event) => setText(event.target.value)}
             placeholder="Add a few details…"
@@ -362,6 +563,9 @@ export default function Controls({ name }: ExampleProps) {
       return (
         <>
           <Toggle
+            variant={variant === "Outline" ? "outline" : "default"}
+            size={size}
+            disabled={disabled}
             aria-label="Bold text"
             pressed={checked}
             onPressedChange={setChecked}
@@ -375,7 +579,12 @@ export default function Controls({ name }: ExampleProps) {
       return (
         <>
           <ToggleGroup
-            multiple
+            multiple={variant !== "Single"}
+            variant={variant === "Outline" ? "outline" : "default"}
+            size={size}
+            orientation={variant === "Vertical" ? "vertical" : "horizontal"}
+            spacing={variant === "No spacing" ? 0 : 2}
+            disabled={disabled}
             aria-label="Text formatting"
             value={formats}
             onValueChange={setFormats}

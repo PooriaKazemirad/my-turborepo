@@ -13,17 +13,17 @@
     "./react-internal": "./react-internal.ts"
   },
   "devDependencies": {
-    "@babel/core": "^8.0.7",
-    "@babel/eslint-parser": "^8.0.7",
-    "@eslint/js": "^10",
-    "@next/eslint-plugin-next": "16.4.2",
+    "@babel/core": "catalog:",
+    "@babel/eslint-parser": "catalog:",
+    "@eslint/js": "catalog:",
+    "@next/eslint-plugin-next": "catalog:",
     "@workspace/typescript-config": "workspace:*",
-    "eslint": "^10",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-react-hooks": "^7.1.1",
-    "eslint-plugin-turbo": "^2.11.7",
-    "globals": "^17.13.0",
-    "jiti": "^2.7.0",
-    "typescript": "7.0.2"
+    "eslint": "catalog:",
+    "eslint-config-prettier": "catalog:",
+    "eslint-plugin-react-hooks": "catalog:",
+    "eslint-plugin-turbo": "catalog:",
+    "globals": "catalog:",
+    "jiti": "catalog:",
+    "typescript": "catalog:"
   }
 }
