@@ -502,7 +502,7 @@ export function Dashboard() {
                 variant="inherit"
                 className="flex items-center gap-2"
               >
-                <span className="h-0.5 w-4 rounded-full bg-chart-1" />
+                  <span className="h-0.5 w-4 rounded-full bg-primary" />
                 {yearly ? "2026" : "This month"}
               </Typography>
               <Typography

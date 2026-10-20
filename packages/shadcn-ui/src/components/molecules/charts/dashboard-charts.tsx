@@ -41,7 +41,8 @@ export function SalesChart({
           color: "chart-2",
           strokeDasharray: "4 4",
         },
-        { dataKey: "current", label: currentLabel, color: "chart-1" },
+        // The source's light chart-1 is below 3:1 against the card surface.
+        { dataKey: "current", label: currentLabel, color: "primary" },
       ]}
       legend={false}
       valueDomain={[0, 40]}

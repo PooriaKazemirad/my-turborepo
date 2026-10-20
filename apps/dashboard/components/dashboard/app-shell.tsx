@@ -78,9 +78,9 @@ function SidebarContent({
       <Link
         href="/"
         aria-label="Shadcn dashboard home"
-        className={`flex h-(--header-height) items-center gap-2.5 px-6 text-foreground ${compact ? "justify-center px-0" : ""}`}
+        className={`flex h-(--header-height) items-center gap-2.5 border-b border-sidebar-border px-6 text-sidebar-accent-foreground ${compact ? "justify-center px-0" : ""}`}
       >
-        <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+        <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
           <Layers className="size-5" strokeWidth={1.8} />
         </span>
         {!compact && (
@@ -92,7 +92,7 @@ function SidebarContent({
           >
             shadcn
             <Typography
-              color="muted-foreground"
+              color="sidebar-muted-foreground"
               as="span"
               variant="inherit"
               className="ms-1 font-normal"
@@ -107,7 +107,7 @@ function SidebarContent({
           <div key={group.label}>
             {!compact && (
               <Typography
-                color="muted-foreground"
+                color="sidebar-muted-foreground"
                 as="p"
                 variant="caption"
                 className="mb-2.5 px-3 font-medium tracking-widest"
@@ -115,7 +115,9 @@ function SidebarContent({
                 {group.label}
               </Typography>
             )}
-            {compact && <div className="mx-auto mb-2.5 h-px w-6 bg-border" />}
+            {compact && (
+              <div className="mx-auto mb-2.5 h-px w-6 bg-sidebar-border" />
+            )}
             <nav aria-label={group.label} className="space-y-1">
               {group.items.map(({ title, icon: Icon, href, badge }) => {
                 const active = isDesignSystem
@@ -128,7 +130,7 @@ function SidebarContent({
                     title={compact ? title : undefined}
                     onClick={() => setMobileOpen(false)}
                     aria-current={active ? "page" : undefined}
-                    className={`group flex min-h-10 items-center gap-3 rounded-md px-3 text-body transition-colors duration-150 ${compact ? "justify-center px-0" : ""} ${active ? "bg-sidebar-accent font-medium text-sidebar-accent-foreground" : "text-sidebar-foreground hover:bg-sidebar-accent/60 hover:text-foreground"}`}
+                    className={`group flex min-h-10 items-center gap-3 rounded-md px-3 text-body transition-colors duration-150 focus-visible:outline-sidebar-ring ${compact ? "justify-center px-0" : ""} ${active ? "bg-sidebar-accent font-medium text-sidebar-accent-foreground" : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"}`}
                   >
                     <Icon className="size-[18px] shrink-0" strokeWidth={1.7} />
                     {!compact && (
@@ -143,10 +145,10 @@ function SidebarContent({
                         </Typography>
                         {badge && (
                           <Typography
-                            color="muted-foreground"
+                            color="sidebar-muted-foreground"
                             as="span"
                             variant="caption"
-                            className={`rounded px-1.5 py-0.5 ${badge === "New" ? "bg-card ring-1 ring-border" : ""}`}
+                            className={`rounded px-1.5 py-0.5 ${badge === "New" ? "bg-sidebar-muted ring-1 ring-sidebar-border" : ""}`}
                           >
                             {badge}
                           </Typography>
@@ -161,12 +163,12 @@ function SidebarContent({
         ))}
       </div>
       {!compact && (
-        <div className="mx-4 mb-5 rounded-lg border bg-card p-4">
-          <div className="mb-3 flex size-8 items-center justify-center rounded-md border">
+        <div className="mx-4 mb-5 rounded-lg border border-sidebar-border bg-sidebar-accent p-4">
+          <div className="mb-3 flex size-8 items-center justify-center rounded-md border border-sidebar-border">
             <Activity className="size-4" />
           </div>
           <Typography
-            color="foreground"
+            color="sidebar-accent-foreground"
             as="p"
             variant="label"
             className="font-semibold"
@@ -174,7 +176,7 @@ function SidebarContent({
             A little clarity, every day.
           </Typography>
           <Typography
-            color="muted-foreground"
+            color="sidebar-muted-foreground"
             as="p"
             variant="label"
             className="mt-1 leading-relaxed"
@@ -183,10 +185,10 @@ function SidebarContent({
           </Typography>
         </div>
       )}
-      <div className="border-t p-3">
+      <div className="border-t border-sidebar-border p-3">
         <button
           title={compact ? "Settings" : undefined}
-          className={`flex min-h-10 w-full items-center gap-3 rounded-md px-3 text-sidebar-foreground transition-colors hover:bg-sidebar-accent ${compact ? "justify-center px-0" : ""}`}
+          className={`flex min-h-10 w-full items-center gap-3 rounded-md px-3 text-sidebar-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${compact ? "justify-center px-0" : ""}`}
           onClick={() => {
             setPreferencesOpen(true)
             setMobileOpen(false)
@@ -201,18 +203,19 @@ function SidebarContent({
         </button>
         <button
           aria-label="Open Cameron Williamson’s profile"
-          className={`mt-2 flex w-full items-center gap-2.5 rounded-lg p-2 text-start hover:bg-sidebar-accent/60 ${compact ? "justify-center px-0" : ""}`}
+          className={`mt-2 flex w-full items-center gap-2.5 rounded-lg p-2 text-start hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${compact ? "justify-center px-0" : ""}`}
           onClick={() => setProfileOpen(true)}
         >
           <Avatar
             name="Cameron Williamson"
-            className="bg-primary text-primary-foreground"
+            color="sidebar-accent-foreground"
+            className="bg-sidebar-muted"
           />
           {!compact && (
             <>
               <span className="min-w-0 flex-1">
                 <Typography
-                  color="foreground"
+                  color="sidebar-accent-foreground"
                   as="span"
                   variant="label"
                   className="block truncate font-medium"
@@ -220,7 +223,7 @@ function SidebarContent({
                   Cameron Williamson
                 </Typography>
                 <Typography
-                  color="muted-foreground"
+                  color="sidebar-muted-foreground"
                   as="span"
                   variant="caption"
                   className="block"
@@ -228,7 +231,7 @@ function SidebarContent({
                   Personal account
                 </Typography>
               </span>
-              <ChevronDown className="size-3.5 text-muted-foreground" />
+              <ChevronDown className="size-3.5 text-sidebar-muted-foreground" />
             </>
           )}
         </button>
@@ -444,7 +447,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       </div>
 
       <Dialog open={mobileOpen} onOpenChange={setMobileOpen} title="Navigation">
-        <div className="-mx-3 -mt-4 flex flex-col">
+        <div className="-mx-3 -mt-4 flex flex-col rounded-lg bg-sidebar text-sidebar-foreground">
           <SidebarContent {...sidebarProps} />
         </div>
       </Dialog>

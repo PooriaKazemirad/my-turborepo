@@ -43,6 +43,70 @@ Themes override semantic values under `.dark`; component markup stays the same. 
 
 Spacing utilities use `--space-1` as the Tailwind base. Typography utilities are registered with the shared `cn` merger so `text-label` overrides another size without accidentally removing `text-primary-foreground`.
 
+## Color theme sync
+
+The shared color theme starts with the 34 color tokens from the supplied `globals.css` for [School Teacher Dashboard (Figma Make)](https://www.figma.com/make/pTYdoEtzaC0R5V5rvQJCP2/School-Teacher-Dashboard--Community-). Both apps import `shadcn-ui/globals.css`, so the dashboard, component gallery, charts, and token JSON export use the same values. OKLCH values remain in their original format. Sidebar colors are overridden by the subsequently supplied `Sidebar.tsx`, whose component classes use a fixed dark slate palette in both themes.
+
+| Token | Light | Dark |
+| --- | --- | --- |
+| `--background` | `oklch(0.985 0.002 247.839)` (Tailwind gray-50) | `oklch(0.145 0 0)` |
+| `--foreground` | `oklch(0.145 0 0)` | `oklch(0.985 0 0)` |
+| `--card` | `#ffffff` | `oklch(0.145 0 0)` |
+| `--card-foreground` | `oklch(0.145 0 0)` | `oklch(0.985 0 0)` |
+| `--popover` | `oklch(1 0 0)` | `oklch(0.145 0 0)` |
+| `--popover-foreground` | `oklch(0.145 0 0)` | `oklch(0.985 0 0)` |
+| `--primary` | `#030213` | `oklch(0.985 0 0)` |
+| `--primary-foreground` | `oklch(1 0 0)` | `oklch(0.205 0 0)` |
+| `--secondary` | `oklch(0.95 0.0058 264.53)` | `oklch(0.269 0 0)` |
+| `--secondary-foreground` | `#030213` | `oklch(0.985 0 0)` |
+| `--muted` | `#ececf0` | `oklch(0.269 0 0)` |
+| `--muted-foreground` | `#717182` | `oklch(0.708 0 0)` |
+| `--accent` | `#e9ebef` | `oklch(0.269 0 0)` |
+| `--accent-foreground` | `#030213` | `oklch(0.985 0 0)` |
+| `--destructive` | `#d4183d` | `oklch(0.396 0.141 25.723)` |
+| `--destructive-foreground` | `#ffffff` | `oklch(0.637 0.237 25.331)` |
+| `--border` | `rgba(0, 0, 0, 0.1)` | `oklch(0.269 0 0)` |
+| `--input` | `transparent` | `oklch(0.269 0 0)` |
+| `--input-background` | `#f3f3f5` | `#f3f3f5` (inherited) |
+| `--switch-background` | `#cbced4` | `#cbced4` (inherited) |
+| `--ring` | `oklch(0.708 0 0)` | `oklch(0.439 0 0)` |
+| `--chart-1` | `oklch(0.646 0.222 41.116)` | `oklch(0.488 0.243 264.376)` |
+| `--chart-2` | `oklch(0.6 0.118 184.704)` | `oklch(0.696 0.17 162.48)` |
+| `--chart-3` | `oklch(0.398 0.07 227.392)` | `oklch(0.769 0.188 70.08)` |
+| `--chart-4` | `oklch(0.828 0.189 84.429)` | `oklch(0.627 0.265 303.9)` |
+| `--chart-5` | `oklch(0.769 0.188 70.08)` | `oklch(0.645 0.246 16.439)` |
+| `--sidebar` | `oklch(0.208 0.042 265.755)` | `oklch(0.208 0.042 265.755)` |
+| `--sidebar-foreground` | `oklch(0.869 0.022 252.894)` | `oklch(0.869 0.022 252.894)` |
+| `--sidebar-primary` | `#ffffff` | `#ffffff` |
+| `--sidebar-primary-foreground` | `var(--sidebar)` | `var(--sidebar)` |
+| `--sidebar-accent` | `oklch(0.279 0.041 260.031)` | `oklch(0.279 0.041 260.031)` |
+| `--sidebar-accent-foreground` | `#ffffff` | `#ffffff` |
+| `--sidebar-border` | `oklch(0.372 0.044 257.287)` | `oklch(0.372 0.044 257.287)` |
+| `--sidebar-ring` | `oklch(0.704 0.04 256.788)` | `oklch(0.704 0.04 256.788)` |
+
+The source omits dark overrides for `input-background` and `switch-background`; their values inherit exactly as supplied. Text fields use `input-background` in light mode and retain their existing dark control surfaces to keep text legible. Unchecked switches use `switch-background`. Checkboxes, radios, outlined toggles, and separators use the border role because the source's light `input` border is transparent. Dark destructive text uses `destructive-foreground`, while destructive fills and validation borders use `destructive`.
+
+Existing neutral foundations, success/warning/danger/info pairs, spacing, typography, shape, elevation, motion, and layout tokens remain project extensions. The source's root font size and base typography rules are not imported by this color sync. The gallery shows all 34 original color roles with the sidebar overrides, two additional sidebar roles, and project feedback colors; the complete token table and export also include project extensions.
+
+The light `chart-1` color has approximately 2.90:1 contrast against the white card. The main sales line uses `primary` and the dashed comparison uses `chart-2` so both meet the dashboard's existing 3:1 line-contrast requirement. The source chart palette remains unchanged for categorical charts and previews; its colors are not a guarantee of contrast for every chart or surface.
+
+### Sidebar component colors
+
+The supplied `src/app/components/layout/Sidebar.tsx` applies Tailwind slate classes directly. Those component colors take precedence over the generic sidebar values in the earlier `globals.css`. The sidebar stays dark when the rest of the app switches between light and dark themes.
+
+| Role | Source class | Shared token |
+| --- | --- | --- |
+| Background | `bg-slate-900` | `sidebar` |
+| Navigation text and icons | `text-slate-300` | `sidebar-foreground` |
+| Active and hover surface | `bg-slate-800` | `sidebar-accent` |
+| Active text and brand | `text-white` | `sidebar-accent-foreground` |
+| Logo surface / icon | `bg-white text-slate-900` | `sidebar-primary / sidebar-primary-foreground` |
+| Borders | `border-slate-700` | `sidebar-border` |
+| Profile avatar | `bg-slate-700` | `sidebar-muted` |
+| Supporting text | `text-slate-400` | `sidebar-muted-foreground` |
+
+Values use the installed Tailwind slate palette. Desktop, collapsed, and mobile navigation share these roles. Existing dashboard branding, content, navigation behavior, and dimensions remain in place.
+
 ## Shared components
 
 ### Layout direction

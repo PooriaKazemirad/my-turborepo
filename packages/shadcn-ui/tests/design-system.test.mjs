@@ -27,14 +27,35 @@ function resolve(tokens, name, visited = new Set()) {
   )
 }
 
-function luminance(hex) {
-  const channels = hex
-    .replace("#", "")
-    .match(/.{2}/g)
-    .map((channel) => parseInt(channel, 16) / 255)
-    .map((value) =>
-      value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4
+function luminance(color) {
+  let channels
+  if (color.startsWith("oklch(")) {
+    // OKLCH -> OKLab -> linear sRGB; clip to the sRGB display gamut.
+    const [lightness, chroma, hue] = color.slice(6, -1).split(/\s+/).map(Number)
+    const a = chroma * Math.cos((hue * Math.PI) / 180)
+    const b = chroma * Math.sin((hue * Math.PI) / 180)
+    const l = (lightness + 0.3963377774 * a + 0.2158037573 * b) ** 3
+    const m = (lightness - 0.1055613458 * a - 0.0638541728 * b) ** 3
+    const s = (lightness - 0.0894841775 * a - 1.291485548 * b) ** 3
+    channels = [
+      4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+      -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
+      -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s,
+    ].map((value) => Math.max(0, Math.min(1, value)))
+  } else {
+    assert.match(
+      color,
+      /^#[0-9a-f]{6}$/i,
+      `Unsupported contrast color: ${color}`
     )
+    channels = color
+      .slice(1)
+      .match(/.{2}/g)
+      .map((channel) => parseInt(channel, 16) / 255)
+      .map((value) =>
+        value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4
+      )
+  }
   return channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722
 }
 
@@ -58,6 +79,9 @@ test("all small-text semantic pairs meet WCAG AA contrast", () => {
     ["muted-foreground", "card"],
     ["primary-foreground", "primary"],
     ["sidebar-foreground", "sidebar"],
+    ["sidebar-muted-foreground", "sidebar"],
+    ["sidebar-accent-foreground", "sidebar-accent"],
+    ["sidebar-primary-foreground", "sidebar-primary"],
     ["success", "success-soft"],
     ["warning", "warning-soft"],
     ["danger", "danger-soft"],
@@ -102,7 +126,7 @@ test("semantic font sizes preserve text colors while overriding other sizes", ()
 
 test("both sales chart lines have at least 3:1 contrast against their surface", () => {
   for (const tokens of [light, dark]) {
-    for (const series of ["chart-1", "chart-2"]) {
+    for (const series of ["primary", "chart-2"]) {
       const a = luminance(resolve(tokens, series))
       const b = luminance(resolve(tokens, "card"))
       const ratio = (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05)

@@ -14,7 +14,8 @@
   width: var(--shell-sidebar-width);
   flex-direction: column;
   background: var(--sidebar);
-  border-inline-end: var(--border-width) solid var(--border);
+  color: var(--sidebar-foreground);
+  border-inline-end: var(--border-width) solid var(--sidebar-border);
   transition: width var(--duration-normal) var(--ease-standard);
 }
 .dashboard-body {
@@ -53,10 +54,13 @@
   max-width: 100%;
   border: var(--border-width) solid var(--input);
   border-radius: var(--radius-control);
-  background: var(--card);
+  background: var(--input-background);
   padding: var(--space-2) var(--space-3);
   font-size: var(--font-size-label);
   color: var(--foreground);
+}
+.dark .control-select {
+  background: var(--input);
 }
 .control-select.with-icon {
   padding-inline-start: var(--space-8);

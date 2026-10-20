@@ -56,6 +56,146 @@ export const colorTokens = [
     label: "Navigation",
     description: "The persistent workspace shell",
   },
+  {
+    name: "card-foreground",
+    label: "Surface text",
+    description: "Text and icons on cards and panels",
+  },
+  {
+    name: "popover",
+    label: "Popover",
+    description: "Menus, tooltips, and floating surfaces",
+  },
+  {
+    name: "popover-foreground",
+    label: "Popover text",
+    description: "Text and icons on floating surfaces",
+  },
+  {
+    name: "primary-foreground",
+    label: "Primary text",
+    description: "Text and icons on primary actions",
+  },
+  {
+    name: "secondary",
+    label: "Secondary",
+    description: "Actions with secondary emphasis",
+  },
+  {
+    name: "secondary-foreground",
+    label: "Secondary text",
+    description: "Text and icons on secondary actions",
+  },
+  {
+    name: "accent",
+    label: "Accent",
+    description: "Highlighted and interactive surfaces",
+  },
+  {
+    name: "accent-foreground",
+    label: "Accent text",
+    description: "Text and icons on highlighted surfaces",
+  },
+  {
+    name: "destructive",
+    label: "Destructive",
+    description: "Destructive actions and validation styling",
+  },
+  {
+    name: "destructive-foreground",
+    label: "Destructive text",
+    description: "Text on destructive fills; dark destructive emphasis",
+  },
+  {
+    name: "input",
+    label: "Input border",
+    description: "Transparent in light mode; a control border in dark mode",
+  },
+  {
+    name: "input-background",
+    label: "Input surface",
+    description: "Light input fill; inherited in the dark token set",
+  },
+  {
+    name: "switch-background",
+    label: "Switch track",
+    description: "Unchecked switch track in both themes",
+  },
+  {
+    name: "ring",
+    label: "Focus",
+    description: "Keyboard focus outlines and rings",
+  },
+  {
+    name: "chart-1",
+    label: "Chart 1",
+    description: "First categorical chart series",
+  },
+  {
+    name: "chart-2",
+    label: "Chart 2",
+    description: "Second categorical chart series",
+  },
+  {
+    name: "chart-3",
+    label: "Chart 3",
+    description: "Third categorical chart series",
+  },
+  {
+    name: "chart-4",
+    label: "Chart 4",
+    description: "Fourth categorical chart series",
+  },
+  {
+    name: "chart-5",
+    label: "Chart 5",
+    description: "Fifth categorical chart series",
+  },
+  {
+    name: "sidebar-foreground",
+    label: "Navigation text",
+    description: "Default sidebar text and icons",
+  },
+  {
+    name: "sidebar-primary",
+    label: "Navigation primary",
+    description: "Primary sidebar actions",
+  },
+  {
+    name: "sidebar-primary-foreground",
+    label: "Navigation primary text",
+    description: "Text and icons on primary sidebar actions",
+  },
+  {
+    name: "sidebar-accent",
+    label: "Navigation accent",
+    description: "Selected and highlighted sidebar items",
+  },
+  {
+    name: "sidebar-accent-foreground",
+    label: "Navigation accent text",
+    description: "Text and icons on highlighted sidebar items",
+  },
+  {
+    name: "sidebar-border",
+    label: "Navigation border",
+    description: "Sidebar edges and dividers",
+  },
+  {
+    name: "sidebar-ring",
+    label: "Navigation focus",
+    description: "Sidebar keyboard focus outlines",
+  },
+  {
+    name: "sidebar-muted",
+    label: "Navigation avatar",
+    description: "Slate surface for sidebar profile avatars",
+  },
+  {
+    name: "sidebar-muted-foreground",
+    label: "Navigation secondary text",
+    description: "Sidebar captions and supporting text",
+  },
 ] as const
 
 export const tokenGroups = {
@@ -88,8 +228,11 @@ export const tokenGroups = {
     "accent",
     "accent-foreground",
     "destructive",
+    "destructive-foreground",
     "border",
     "input",
+    "input-background",
+    "switch-background",
     "ring",
     "success",
     "success-soft",
@@ -112,6 +255,8 @@ export const tokenGroups = {
     "sidebar-accent-foreground",
     "sidebar-border",
     "sidebar-ring",
+    "sidebar-muted",
+    "sidebar-muted-foreground",
     "overlay",
   ],
   spacing: [

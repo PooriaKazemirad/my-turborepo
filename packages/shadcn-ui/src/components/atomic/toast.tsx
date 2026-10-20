@@ -165,7 +165,12 @@ function ToastIcon({ type }: { type: string | undefined }) {
   }
 
   if (type === "error") {
-    icon = <OctagonXIcon className="text-destructive" aria-hidden="true" />
+    icon = (
+      <OctagonXIcon
+        className="text-destructive dark:text-destructive-foreground"
+        aria-hidden="true"
+      />
+    )
   }
 
   if (type === "loading") {
